@@ -18,6 +18,8 @@ class UserRegisterView(FormView):
     success_url = "/"
 
     def form_valid(self, form):
+        # llamamos al método create_user que sobreescribimos
+        # en el archivo managers.py
         User.objects.create_user(
             form.cleaned_data["username"],
             form.cleaned_data["email"],
@@ -40,15 +42,27 @@ class UserLoginView(FormView):
     success_url = reverse_lazy("core_app:home")
 
     def form_valid(self, form):
+        # authenticate revisa que las credenciales proporcionadas por
+        # el usuario coincidan con nuestra base de datos, si el usuario
+        # es correcto entonces devuelve un usuario, sino, devuelve NONE
         user = authenticate(
             username=form.cleaned_data["username"],
             password=form.cleaned_data["password"],
         )
+
+        # una vez autenticamos un usuario inicia una sesión en nuestro
+        # sistema mediante el médoto login, la sesión se guarda en el
+        # request de cada petición
         login(self.request, user)
+
         return super(UserLoginView, self).form_valid(form)
 
 
 class UserLogoutView(View):
+    """ vista para cerrar la sesión de los usuarios """
     def get(self, request, *args, **kwargs):
+        # el método logout hace lo contrario al método login
+        # en vez de guardar la sesión en la request, la borra
+        # entonces el usuario ya no está autenticado
         logout(request)
         return HttpResponseRedirect(reverse("users_app:login"))
