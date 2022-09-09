@@ -30,7 +30,6 @@ class UserRegisterView(FormView):
             city=form.cleaned_data["city"],
             phone=form.cleaned_data["phone"],
             vinc_type=form.cleaned_data["vinc_type"],
-            last_name=form.cleaned_data["last_name"],
         )
 
         return super(UserRegisterView, self).form_valid(form)

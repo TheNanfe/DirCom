@@ -19,7 +19,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     # campos obligatorios
     username = models.CharField("nombre de usuario", max_length=50, unique=True) 
-    gov_id = models.CharField("documento de identidad", max_length=10, unique=True) 
+    gov_id = models.CharField("documento de identidad", max_length=50, unique=True) 
     email = models.EmailField("correo electrónico", max_length=254, unique=True) 
     # campos extras
     first_name = models.CharField("nombres", blank=True, null=True, max_length=150)
