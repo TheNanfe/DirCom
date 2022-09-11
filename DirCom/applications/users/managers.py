@@ -12,8 +12,8 @@ class UserManager(BaseUserManager, models.Manager):
     def _create_user(
         self,
         username,
-        gov_id,
         email,
+        gov_id,
         password,
         is_staff,
         is_superuser,
