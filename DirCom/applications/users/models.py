@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 
@@ -40,9 +41,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     """
 
     username = models.CharField("nombre de usuario", max_length=50, unique=True)
-    persona = models.ForeignKey(Persona, on_delete=models.CASCADE, related_name="user", unique=True)
+    persona = models.OneToOneField(Persona, on_delete=models.CASCADE, primary_key=True)
     is_staff = models.BooleanField("staff", default=False)
     is_active = models.BooleanField("activo", default=True)
+    date_joined = models.DateTimeField(default=timezone.now)
 
     # convierte el campo username en obligatorio por default
     USERNAME_FIELD = "username"
