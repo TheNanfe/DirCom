@@ -32,14 +32,15 @@ class UserRegisterForm(forms.ModelForm):
         # la lista de campos que necesita nuestro modelo
         fields = (
             "username", 
-            "gov_id", 
-            "email", 
-            "first_name", 
-            "last_name",
-            "city",
-            "phone",
-            "area",
-            "vinc_type",
+            "persona",
+            # "gov_id", 
+            # "email", 
+            # "first_name", 
+            # "last_name",
+            # "city",
+            # "phone",
+            # "area",
+            # "vinc_type",
         )
 
     def clean_repeat_password(self):
