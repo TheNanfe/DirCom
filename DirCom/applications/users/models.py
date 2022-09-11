@@ -40,8 +40,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     """
 
     username = models.CharField("nombre de usuario", max_length=50, unique=True)
-    persona = models.ForeignKey(Persona, on_delete=models.CASCADE, related_name="user")
+    persona = models.ForeignKey(Persona, on_delete=models.CASCADE, related_name="user", unique=True)
     is_staff = models.BooleanField("staff", default=False)
+    is_active = models.BooleanField("activo", default=True)
 
     # convierte el campo username en obligatorio por default
     USERNAME_FIELD = "username"
