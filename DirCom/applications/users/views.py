@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import View
+from django.views.generic import View, CreateView
 from django.views.generic.edit import FormView
 from django.urls import reverse_lazy, reverse
 # django.contrib.auth es el módulo que nos permite implementar
@@ -8,7 +8,14 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect
 
 from .forms import UserRegisterForm, UserLoginForm
-from .models import User
+from .models import User, Persona
+
+
+class PersonaRegisterView(CreateView):
+    model = Persona
+    template_name = 'users/add_persona.html'
+    fields = ("__all__")
+    success_url = reverse_lazy('core_app:home')
 
 
 class UserRegisterView(FormView):

@@ -28,32 +28,7 @@ class Persona(models.Model):
         return f"{self.first_name} {self.last_name}"
 
 
-class Persona(models.Model):
-    """
-        Clase para generar el modelo de Personas que es el paso
-        previo al registro de usuarios, en esta tabla se guardarán
-        las personas que deseen registrarse en el sistema, esta
-        clase hereda a User
-    """
-
-    # campos obligatorios
-    username = models.CharField("nombre de usuario", max_length=50, unique=True) 
-    gov_id = models.CharField("documento de identidad", max_length=50, unique=True) 
-    email = models.EmailField("correo electrónico", max_length=254, unique=True) 
-    # campos extras
-    first_name = models.CharField("nombres", blank=True, null=True, max_length=150)
-    last_name = models.CharField("apellidos", blank=True, null=True, max_length=150)
-    city = models.CharField("ciudad", blank=True, null=True,  max_length=30)
-    phone = models.CharField("número de teléfono", blank=True, null=True, max_length=30)
-
-    class Meta:
-        verbose_name = "persona"
-
-    def __str__(self):
-        return f"{self.first_name} {self.last_name}"
-
-
-class User(AbstractBaseUser, Persona, PermissionsMixin):
+class User(AbstractBaseUser, PermissionsMixin):
     """ 
         Clase para generar mi modelo personalizado de usuarios
         AbstractBaseUser es un modelo de Django que ya trae integradas
