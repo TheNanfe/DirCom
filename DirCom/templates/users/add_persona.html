@@ -2,15 +2,15 @@
 
 
 {% block title %}
-    Registrar usuario
+    Crear persona
 {% endblock title %}
 
 
 {% block content %}
-    <h1>Registrar usuario</h1>
+    <h1>Crear persona</h1>
     <form method="POST">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Registrar</button>
+        <button type="submit">Crear</button>
     </form>
 {% endblock content %}
