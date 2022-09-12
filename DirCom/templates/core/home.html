@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    Bienvenido
+{% endblock title %}
+
+
+{% block content %}
+    <h1>Bienvenido {{ user.username }} al DirCom</h1>
+    <h3>Acciones</h3>
+    <ul>
+        <li>
+            <a href="{% url 'users_app:logout' %}">Cerrar sesión</a>
+        </li>
+        <li>
+            <a href="#">Actualizar perfil</a>
+        </li>
+    </ul>
+{% endblock content %}
