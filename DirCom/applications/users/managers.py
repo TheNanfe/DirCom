@@ -31,7 +31,7 @@ class UserManager(BaseUserManager, models.Manager):
     """
 
     def create_user(self, username, persona, password=None, **extra_fields):
-        self._create_user(username, persona, password, False, False, **extra_fields)
+        self._create_user(username, persona.id, password, False, False, **extra_fields)
 
     """
         este es un método público que permite crear super usuarios, es decir,

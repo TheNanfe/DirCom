@@ -53,14 +53,6 @@ class UserRegisterForm(forms.ModelForm):
         fields = (
             "username", 
             "persona",
-            # "gov_id", 
-            # "email", 
-            # "first_name", 
-            # "last_name",
-            # "city",
-            # "phone",
-            # "area",
-            # "vinc_type",
         )
 
     def clean_repeat_password(self):

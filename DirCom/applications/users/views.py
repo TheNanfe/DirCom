@@ -30,6 +30,16 @@ class PersonaUpdateProfileView(LoginRequiredMixin, UpdateView):
         return Persona.objects.get(pk=self.request.user.persona_id)
 
 
+class PersonaDeleteProfileView(LoginRequiredMixin, View):
+    login_url = reverse_lazy("users_app:login")
+
+    """ vista para eliminar la cuenta de un usuario """
+    def get(self, request, *args, **kwargs):
+        user = self.request.user
+        user.is_active = False
+        return HttpResponseRedirect(reverse("users_app:login"))
+
+
 class UserRegisterView(FormView):
     """ vista para registrar nuevos usuarios """
     template_name = "users/register.html"
@@ -41,14 +51,8 @@ class UserRegisterView(FormView):
         # en el archivo managers.py
         User.objects.create_user(
             form.cleaned_data["username"],
-            form.cleaned_data["email"],
-            form.cleaned_data["gov_id"],
+            form.cleaned_data["persona"],
             form.cleaned_data["custom_password"],
-            first_name=form.cleaned_data["first_name"],
-            last_name=form.cleaned_data["last_name"],
-            city=form.cleaned_data["city"],
-            phone=form.cleaned_data["phone"],
-            vinc_type=form.cleaned_data["vinc_type"],
         )
 
         return super(UserRegisterView, self).form_valid(form)
