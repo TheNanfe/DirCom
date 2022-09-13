@@ -5,9 +5,10 @@ from django.urls import reverse_lazy, reverse
 # django.contrib.auth es el módulo que nos permite implementar
 # las funcionalidades de manejos de sesión en nuestras vistas
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 
-from .forms import UserRegisterForm, UserLoginForm
+from .forms import UserRegisterForm, UserLoginForm, UpdatePasswordForm
 from .models import User, Persona
 
 
@@ -64,7 +65,9 @@ class UserLoginView(FormView):
         return super(UserLoginView, self).form_valid(form)
 
 
-class UserLogoutView(View):
+class UserLogoutView(LoginRequiredMixin, View):
+    login_url = reverse_lazy("users_app:login")
+
     """ vista para cerrar la sesión de los usuarios """
     def get(self, request, *args, **kwargs):
         # el método logout hace lo contrario al método login
@@ -72,3 +75,30 @@ class UserLogoutView(View):
         # entonces el usuario ya no está autenticado
         logout(request)
         return HttpResponseRedirect(reverse("users_app:login"))
+
+
+class UpdatePasswordView(LoginRequiredMixin, FormView):
+    template_name = "users/password.html"
+    form_class = UpdatePasswordForm
+    success_url = reverse_lazy("users_app:login")
+    login_url = reverse_lazy("users_app:login")
+
+    def get_form_kwargs(self):
+        kwargs = super(UpdatePasswordView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        user = self.request.user
+        is_authenticated = authenticate(
+            username=user.username,
+            password=form.cleaned_data['current_password']
+        )
+
+        if is_authenticated:
+            new_password = form.cleaned_data["custom_password"]
+            user.set_password(new_password)
+            user.save()
+
+        logout(self.request)
+        return super(UpdatePasswordView, self).form_valid(form)

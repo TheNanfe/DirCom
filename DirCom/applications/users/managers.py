@@ -9,14 +9,9 @@ class UserManager(BaseUserManager, models.Manager):
         es un método privado de la clase BaseUserManager por eso
         el nombre empieza con _
     """
+
     def _create_user(
-        self,
-        username,
-        persona,
-        password,
-        is_staff,
-        is_superuser,
-        **extra_fields
+        self, username, persona, password, is_staff, is_superuser, **extra_fields
     ):
         user = self.model(
             username=username,
@@ -34,19 +29,17 @@ class UserManager(BaseUserManager, models.Manager):
         no administradores, desde el frente de la aplicación, este es el 
         método que usamos para crear los usuarios en el registro de la página web
     """
+
     def create_user(self, username, persona, password=None, **extra_fields):
-        self._create_user(
-            username, persona, password, False, False, **extra_fields
-        )
+        self._create_user(username, persona, password, False, False, **extra_fields)
 
     """
         este es un método público que permite crear super usuarios, es decir,
         administradores con todos los permisos. Podemos crear usuarios desde
         la línea de comandos ejecutando python manage.py createsuperuser
     """
-    def create_superuser(
-        self, username, persona, password=None, **extra_fields
-    ):
+
+    def create_superuser(self, username, persona, password=None, **extra_fields):
         return self._create_user(
             username, persona, password, True, True, **extra_fields
         )
