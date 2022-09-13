@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import View, CreateView
+from django.views.generic import View, CreateView, UpdateView
 from django.views.generic.edit import FormView
 from django.urls import reverse_lazy, reverse
 # django.contrib.auth es el módulo que nos permite implementar
@@ -17,6 +17,17 @@ class PersonaRegisterView(CreateView):
     template_name = 'users/add_persona.html'
     fields = ("__all__")
     success_url = reverse_lazy('core_app:home')
+
+
+class PersonaUpdateProfileView(LoginRequiredMixin, UpdateView):
+    model = Persona
+    template_name = 'users/edit_persona.html'
+    fields = ("__all__")
+    success_url = reverse_lazy('core_app:home')
+    login_url = reverse_lazy("users_app:login")
+
+    def get_object(self):
+        return Persona.objects.get(pk=self.request.user.persona_id)
 
 
 class UserRegisterView(FormView):
