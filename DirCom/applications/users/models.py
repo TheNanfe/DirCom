@@ -39,9 +39,16 @@ class User(AbstractBaseUser, PermissionsMixin):
         -password
         -is_admin
     """
+    ROLE_CHOICES = (
+        (1, "Director"),
+        (2, "Analista"),
+        (3, "Cliente"),
+        (4, "Técnico"),
+    )
 
     username = models.CharField("nombre de usuario", max_length=50, unique=True)
     persona = models.OneToOneField(Persona, on_delete=models.CASCADE, primary_key=True)
+    role = models.PositiveSmallIntegerField("rol", choices=ROLE_CHOICES, default=ROLE_CHOICES[2][0])
     is_staff = models.BooleanField("staff", default=False)
     is_active = models.BooleanField("activo", default=True)
     date_joined = models.DateTimeField(default=timezone.now)
