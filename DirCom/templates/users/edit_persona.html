@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    Editar mis datos
+{% endblock title %}
+
+
+{% block content %}
+    <h1>Editar mis datos</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Guardar</button>
+        <button><a href="{% url 'users_app:delete_persona' %}">Borrar mi perfil</a></button>
+    </form>
+{% endblock content %}

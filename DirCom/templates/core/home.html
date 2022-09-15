@@ -8,13 +8,26 @@
 
 {% block content %}
     <h1>Bienvenido {{ user.username }} al DirCom</h1>
+    <p>Tu rol es {{ user.get_role_display }}</p>
+
+    <h2>Tus datos:</h2>
+    <ul>
+        <li>Nombres: {{ user.persona.first_name }}</li>
+        <li>Apellidos: {{ user.persona.last_name }}</li>
+        <li>Documento: {{ user.persona.gov_id }}</li>
+        <li>Correo electrónico: {{ user.persona.email }}</li>
+    </ul>
+
     <h3>Acciones</h3>
     <ul>
         <li>
             <a href="{% url 'users_app:logout' %}">Cerrar sesión</a>
         </li>
         <li>
-            <a href="#">Actualizar perfil</a>
+            <a href="{% url 'users_app:update_persona' %}">Actualizar perfil</a>
+        </li>
+        <li>
+            <a href="{% url 'users_app:password' %}">Cambiar contraseña</a>
         </li>
     </ul>
 {% endblock content %}

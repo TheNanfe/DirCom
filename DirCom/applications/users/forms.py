@@ -6,6 +6,9 @@ from .models import User
 
 
 class CustomUserCreationForm(UserCreationForm):
+    """
+        clase para el formulario de creación de usuarios del admin
+    """
 
     class Meta:
         model = User
@@ -13,6 +16,9 @@ class CustomUserCreationForm(UserCreationForm):
 
 
 class CustomUserChangeForm(UserChangeForm):
+    """
+        clase para el formulario de edición de usuarios del admin
+    """
 
     class Meta:
         model = User
@@ -47,14 +53,6 @@ class UserRegisterForm(forms.ModelForm):
         fields = (
             "username", 
             "persona",
-            # "gov_id", 
-            # "email", 
-            # "first_name", 
-            # "last_name",
-            # "city",
-            # "phone",
-            # "area",
-            # "vinc_type",
         )
 
     def clean_repeat_password(self):
@@ -101,3 +99,56 @@ class UserLoginForm(forms.Form):
             raise forms.ValidationError("Datos incorrectos")
 
         return self.cleaned_data
+
+
+class UpdatePasswordForm(forms.Form):
+
+    # campo para validar su contraseña actual
+    current_password = forms.CharField(
+            label="Contraseña actual",
+            required=True,
+            widget=forms.PasswordInput(attrs={"placeholder": "Introduzca su contraseña actual"}),
+        )
+
+    # campo para nueva contraseña
+    custom_password = forms.CharField(
+        label="Contraseña nueva",
+        required=True,
+        widget=forms.PasswordInput(attrs={"placeholder": "Introduzca su nueva contraseña"}),
+    )
+
+    # campo para validar que el usuario metió la misma contraseña 2 veces
+    repeat_password = forms.CharField(
+        label="Repetir contraseña nueva",
+        required=True,
+        widget=forms.PasswordInput(attrs={"placeholder": "Repita su nueva contraseña"}),
+    )
+
+    def __init__(self, user, *args, **kwargs):
+        super(UpdatePasswordForm, self).__init__(*args, **kwargs)
+        self.user = user
+
+    def clean(self):
+        """ método para validar las credenciales del usuario """
+        cleaned_data = super(UpdatePasswordForm, self).clean()
+        username = self.user.username
+        password = self.cleaned_data["current_password"]
+
+        if not authenticate(
+            username=username,
+            password=password,
+        ):
+            # si el usuario proporciona credenciales incorrectas entonces
+            # podrá ver este aviso en el formulario de login
+            raise forms.ValidationError("Contraseña actual incorrecta")
+
+        return self.cleaned_data
+
+    def clean_repeat_password(self):
+        """ método para validar que el usuario escribió bien su contraseña """
+        if self.cleaned_data["custom_password"] != self.cleaned_data["repeat_password"]:
+            self.add_error("repeat_password", "Las contraseñas no coinciden")
+
+        """ método para validar que el usuario tiene una contraseña mayor a 5 carácteres """
+        if len(self.cleaned_data["custom_password"]) <= 5:
+            self.add_error("custom_password", "La contraseña es muy corta")

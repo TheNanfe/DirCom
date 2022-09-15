@@ -1,13 +1,14 @@
 from django.shortcuts import render
-from django.views.generic import View, CreateView
+from django.views.generic import View, CreateView, UpdateView
 from django.views.generic.edit import FormView
 from django.urls import reverse_lazy, reverse
 # django.contrib.auth es el módulo que nos permite implementar
 # las funcionalidades de manejos de sesión en nuestras vistas
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 
-from .forms import UserRegisterForm, UserLoginForm
+from .forms import UserRegisterForm, UserLoginForm, UpdatePasswordForm
 from .models import User, Persona
 
 
@@ -16,6 +17,28 @@ class PersonaRegisterView(CreateView):
     template_name = 'users/add_persona.html'
     fields = ("__all__")
     success_url = reverse_lazy('core_app:home')
+
+
+class PersonaUpdateProfileView(LoginRequiredMixin, UpdateView):
+    model = Persona
+    template_name = 'users/edit_persona.html'
+    fields = ("__all__")
+    success_url = reverse_lazy('core_app:home')
+    login_url = reverse_lazy("users_app:login")
+
+    def get_object(self):
+        return Persona.objects.get(pk=self.request.user.persona_id)
+
+
+class PersonaDeleteProfileView(LoginRequiredMixin, View):
+    login_url = reverse_lazy("users_app:login")
+
+    """ vista para eliminar la cuenta de un usuario """
+    def get(self, request, *args, **kwargs):
+        user = self.request.user
+        user.is_active = False
+        user.save()
+        return HttpResponseRedirect(reverse("users_app:login"))
 
 
 class UserRegisterView(FormView):
@@ -29,14 +52,8 @@ class UserRegisterView(FormView):
         # en el archivo managers.py
         User.objects.create_user(
             form.cleaned_data["username"],
-            form.cleaned_data["email"],
-            form.cleaned_data["gov_id"],
+            form.cleaned_data["persona"],
             form.cleaned_data["custom_password"],
-            first_name=form.cleaned_data["first_name"],
-            last_name=form.cleaned_data["last_name"],
-            city=form.cleaned_data["city"],
-            phone=form.cleaned_data["phone"],
-            vinc_type=form.cleaned_data["vinc_type"],
         )
 
         return super(UserRegisterView, self).form_valid(form)
@@ -64,7 +81,9 @@ class UserLoginView(FormView):
         return super(UserLoginView, self).form_valid(form)
 
 
-class UserLogoutView(View):
+class UserLogoutView(LoginRequiredMixin, View):
+    login_url = reverse_lazy("users_app:login")
+
     """ vista para cerrar la sesión de los usuarios """
     def get(self, request, *args, **kwargs):
         # el método logout hace lo contrario al método login
@@ -72,3 +91,30 @@ class UserLogoutView(View):
         # entonces el usuario ya no está autenticado
         logout(request)
         return HttpResponseRedirect(reverse("users_app:login"))
+
+
+class UpdatePasswordView(LoginRequiredMixin, FormView):
+    template_name = "users/password.html"
+    form_class = UpdatePasswordForm
+    success_url = reverse_lazy("users_app:login")
+    login_url = reverse_lazy("users_app:login")
+
+    def get_form_kwargs(self):
+        kwargs = super(UpdatePasswordView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        user = self.request.user
+        is_authenticated = authenticate(
+            username=user.username,
+            password=form.cleaned_data['current_password']
+        )
+
+        if is_authenticated:
+            new_password = form.cleaned_data["custom_password"]
+            user.set_password(new_password)
+            user.save()
+
+        logout(self.request)
+        return super(UpdatePasswordView, self).form_valid(form)
