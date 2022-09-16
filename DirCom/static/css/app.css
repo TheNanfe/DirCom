@@ -1,0 +1,23 @@
+/* utilidades personalizadas */
+
+.red {
+    color: #EB5757;
+}
+
+.bg-red {
+    background-color: #EB5757;
+}
+
+.btn-block {
+    width: 100%;
+}
+
+.btn-red {
+    background-color: #EB5757;
+    color: #fff;
+}
+
+.btn-red:hover {
+    background-color: #bc0e0e;
+    color: #fff;
+}

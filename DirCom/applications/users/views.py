@@ -8,14 +8,18 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 
-from .forms import UserRegisterForm, UserLoginForm, UpdatePasswordForm
+from .forms import (
+    AddPersonaForm,
+    UserRegisterForm, 
+    UserLoginForm, 
+    UpdatePasswordForm
+)
 from .models import User, Persona
 
 
 class PersonaRegisterView(CreateView):
-    model = Persona
+    form_class = AddPersonaForm
     template_name = 'users/add_persona.html'
-    fields = ("__all__")
     success_url = reverse_lazy('core_app:home')
 
 

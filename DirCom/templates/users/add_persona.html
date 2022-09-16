@@ -7,10 +7,23 @@
 
 
 {% block content %}
-    <h1>Crear persona</h1>
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Crear</button>
-    </form>
+    <div class="d-flex flex-column justify-content-center align-items-center min-vh-100 py-5">
+        <h1 class="h3 red fw-normal">DirCom<span class="fw-bold text-dark">CRM</span></h1>
+        <div class="mt-5">
+            <h2 class="text-center">Registrate</h2>
+            <p>
+                ¡Bienvenido! Por favor, introduzca sus datos antes de continuar.
+            </p>
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="d-flex justify-content-end">
+                    <a href="{% url 'users_app:login' %}">Ya tengo una cuenta</a>
+                </div>
+                <div class="mt-3">
+                    <button class="btn btn-red btn-block" type="submit">Ingresar</button>
+                </div>
+            </form>
+        </div>
+    </div>
 {% endblock content %}
