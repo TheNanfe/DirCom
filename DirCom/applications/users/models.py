@@ -37,7 +37,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         Los campos que AbstractBaseUser ya trae predefinidos son:
         -id
         -password
-        -is_admin
+        -is_superuser
     """
     ROLE_CHOICES = (
         (1, "Director"),

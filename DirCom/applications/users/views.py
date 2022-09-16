@@ -41,6 +41,7 @@ class PersonaDeleteProfileView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         user = self.request.user
         user.is_active = False
+        user.save()
         return HttpResponseRedirect(reverse("users_app:login"))
 
 
