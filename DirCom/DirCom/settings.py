@@ -46,6 +46,8 @@ DJANGO_APPS = [
 LOCAL_APPS = [
     'applications.users',
     'applications.core',
+    'applications.preTicket',
+    'applications.files',
 ]
 
 THIRD_PARTY_APPS = []
@@ -62,7 +64,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "dircom.urls"
+ROOT_URLCONF = "DirCom.urls"
 
 TEMPLATES = [
     {
@@ -80,7 +82,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "dircom.wsgi.application"
+WSGI_APPLICATION = "DirCom.wsgi.application"
 
 
 # Database

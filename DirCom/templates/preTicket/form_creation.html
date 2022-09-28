@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+Formulario de Petición
+{% endblock title %}
+
+
+{% block content %}
+<div>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        .form_label{
+            padding-top:30px;
+            display: block;
+        }
+
+        .form_input{
+            width: 500px;
+        }
+
+        .check_input{
+            display: inline-block;
+        }
+
+
+    </style>
+
+    <h1>Formulario de Petición</h1>
+    <form enctype="multipart/form-data" method="post">
+        {% csrf_token %}
+        <div>
+            <label id="first_name_label" class="form_label">Nombre(s): </label>
+            <input id="input_first_name" name="first_name" class="form_input" type="text" value="">
+            <label id="last_name_label" class="form_label">Apellido(s): </label>
+            <input id="input_last_name" name="last_name" class="form_input" type="text" value="">
+            <label id="mail_label" class="form_label">Correo: </label>
+            <input id="input_mail" name="mail" class="form_input" type="text" value="">
+            <label id="subject_label" class="form_label" style="width:100%">Asunto: </label>
+            <input id="input_subject" name="subject" class="form_input" type="text" value="">
+            <input type="hidden" name="status" value="pending">
+            <h3>Seleccione el tipo de Petición </h3>
+            <ul>
+                <input class="check_input" id="check_input_redaction" name="form_type" value="redaction" type="radio">
+                <label for="check_input_redaction">Redaccion y Publicación</label>
+                <br/>
+                <input class="check_input" id="check_input_audiovisual" name="form_type" value="audiovisual"
+                       type="radio">
+                <label for="check_input_audiovisual">Audiovisual</label>
+                <br/>
+                <input class="check_input" id="check_input_graphic_design" name="form_type" value="graphic_design"
+                       type="radio">
+                <label for="check_input_graphic_design">Diseño Gráfico</label>
+                <br/>
+                <input class="check_input" id="check_input_web_site" name="form_type" value="build_web_site"
+                       type="radio">
+                <label for="check_input_web_site">Sitio Web</label>
+            </ul>
+        </div>
+        <div>
+            <textarea name="text_content" style="width:100%; height:300px"></textarea>
+        </div>
+        <h3>Adjunte un archivo:</h3>
+        <div style="width:90%; height: 50px; border: double">
+            <input id="input_file_id" type="file" name="files" multiple="" onchange="loadFile1(event)">
+            <img style="max-size:50px" id="output1"/>
+            <img style="max-size:50px" id="output2"/>
+            <img style="max-size:50px" id="output3"/>
+        </div>
+
+
+        <button type="submit">Enviar Petición</button>
+</div>
+{% endblock content %}
