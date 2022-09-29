@@ -47,7 +47,6 @@ LOCAL_APPS = [
     'applications.users',
     'applications.core',
     'applications.preTicket',
-    'applications.files',
 ]
 
 THIRD_PARTY_APPS = []

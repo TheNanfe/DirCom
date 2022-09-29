@@ -2,29 +2,27 @@ DEFAULT_PATH = "C:/Users/nanre/Documents/DirComUploads"
 
 
 def documents_upload(f):
-    successfully_saved = False
+    file_path = DEFAULT_PATH + "/documents/" + f.name
     try:
-        with open(DEFAULT_PATH + "/documents/" + f.name, "wb+") as destination:
+        with open(file_path, "wb+") as destination:
             for chunk in f.chunks():
                 destination.write(chunk)
-        successfully_saved = True
-        return successfully_saved
+        return file_path
     except Exception as e:
         print(e)
-        return successfully_saved
+        return None
 
 
 def images_upload(f):
-    successfully_saved = False
+    file_path = DEFAULT_PATH + "/images/" + f.name
     try:
-        with open(DEFAULT_PATH + "/documents/" + f.name, "wb+") as destination:
+        with open(file_path, "wb+") as destination:
             for chunk in f.chunks():
                 destination.write(chunk)
-        successfully_saved = True
-        return successfully_saved
+        return file_path
     except Exception as e:
         print(e)
-        return successfully_saved
+        return None
 
 
 def handle_uploaded_file(f):
