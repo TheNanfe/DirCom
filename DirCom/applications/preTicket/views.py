@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse
 from django.views.decorators.http import require_http_methods
-from .forms import FileHandlerForm, UploadFileHandlerForm, PreTicketForm
+from .forms import FileHandlerForm
 from .utils import *
 from django.contrib import messages
 from .models import PreTicket, UploadFiles
@@ -13,6 +13,7 @@ NO_PRE_TICKET_MSG = "No existen Pre Tickets pendientes de procesar"
 
 @require_http_methods(["GET", "POST"])
 def pre_ticket_creation_form(request):
+    """ El formulario desde el cual se crean los Pre Tickets """
     if request.method == "GET":
         return HttpResponse(render(request, template_name="preTicket/form_creation.html"))
     if request.method == "POST":
@@ -37,7 +38,7 @@ def pre_ticket_creation_form(request):
                                               file_path=file_path)
                     upload_file.save()
             messages.info(request, "La peticion ha sido creada con exito!")
-            return HttpResponse(render(request, template_name="preTicket/form_creation.html"))
+            return HttpResponseRedirect(reverse("pre_ticket_app:list_pre_tickets"))
 
     messages.error(request, "Ha ocurrido un error al tratar de crear la solicitud")
     return HttpResponse(render(request, template_name="preTicket/form_creation.html"))
@@ -45,6 +46,7 @@ def pre_ticket_creation_form(request):
 
 @require_http_methods(["GET", "POST"])
 def pre_ticket_status_change(request, pk=None):
+    """ Aqui se procesan los Pre Tickets que tengan estado 'pending'. Puede cambiar a estado 'rejected' o 'accepted' """
     if request.method == "GET":
         pre_ticket_context = {}
         try:
@@ -82,6 +84,7 @@ def pre_ticket_status_change(request, pk=None):
 
 @require_http_methods(["GET"])
 def list_pre_tickets(request):
+    """ Se listan los tickets con estado 'pending' """
     pre_ticket_list = PreTicket.objects.filter(status="pending")
     context = {
         "pre_ticket_list": pre_ticket_list

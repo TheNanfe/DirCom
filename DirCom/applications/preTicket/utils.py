@@ -3,6 +3,7 @@ DEFAULT_PATH = "C:/Users/nanre/Documents/DirComUploads"
 
 
 def documents_upload(f):
+    """ El path que deberia de tomar si el documento no es una Imagen """
     file_path = DEFAULT_PATH + "/documents/" + f.name
     try:
         with open(file_path, "wb+") as destination:
@@ -15,6 +16,7 @@ def documents_upload(f):
 
 
 def images_upload(f):
+    """ El path que deberia de tomar si es una Imagen """
     file_path = DEFAULT_PATH + "/images/" + f.name
     try:
         with open(file_path, "wb+") as destination:
@@ -27,6 +29,7 @@ def images_upload(f):
 
 
 def handle_uploaded_file(f):
+    """ Aqui es donde se guardan de forma local los archivos que se suban al servidor """
     # TODO: Mejorar el guardado de los archivos segun el tipo de documento.
     if f.content_type == "application/pdf":
         return documents_upload(f)

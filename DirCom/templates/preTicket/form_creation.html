@@ -1,31 +1,27 @@
 {% extends 'base.html' %}
 
-
 {% block title %}
 Formulario de Petición
 {% endblock title %}
 
 
 {% block content %}
+<style>
+    .form_label{
+        padding-top:30px;
+        display: block;
+    }
+
+    .form_input{
+        width: 500px;
+    }
+
+    .check_input{
+        display: inline-block;
+    }
+</style>
 <div>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <style>
-        .form_label{
-            padding-top:30px;
-            display: block;
-        }
-
-        .form_input{
-            width: 500px;
-        }
-
-        .check_input{
-            display: inline-block;
-        }
-
-
-    </style>
-
     <h1>Formulario de Petición</h1>
     <form enctype="multipart/form-data" method="post">
         {% csrf_token %}
@@ -62,13 +58,9 @@ Formulario de Petición
         </div>
         <h3>Adjunte un archivo:</h3>
         <div style="width:90%; height: 50px; border: double">
-            <input id="input_file_id" type="file" name="files" multiple="" onchange="loadFile1(event)">
-            <img style="max-size:50px" id="output1"/>
-            <img style="max-size:50px" id="output2"/>
-            <img style="max-size:50px" id="output3"/>
+            <input id="input_file_id" type="file" name="files" multiple="">
         </div>
-
-
         <button type="submit">Enviar Petición</button>
+    </form>
 </div>
 {% endblock content %}
