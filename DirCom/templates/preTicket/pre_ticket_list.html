@@ -1,0 +1,39 @@
+    <style>
+        table, th, td{
+            border: 1px solid;
+            border-collapse: collapse;
+        }
+    </style>
+    <div>
+        <div>
+            <a href="{% url 'pre_ticket_app:pre_ticket_creation_form'%}" type="text" class="button-active" type="button">Crear Pre Tickets</a>
+        </div>
+        {% if pre_ticket_list %}
+        <table class="tablesorter" width="100%">
+            <thead>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Email</th>
+                <th>Tipo Solicitud</th>
+                <th>Asunto</th>
+                <th>Accion</th>
+            </thead>
+            {% for pre_ticket in pre_ticket_list%}
+                <tr>
+                    <td>{{pre_ticket.pre_ticket_id}}</td>
+                    <td>{{pre_ticket.first_name}}</td>
+                    <td>{{pre_ticket.last_name}}</td>
+                    <td>{{pre_ticket.mail}}</td>
+                    <td>{{pre_ticket.form_type}}</td>
+                    <td>{{pre_ticket.subject}}</td>
+                    <td><a href="{% url 'pre_ticket_app:pre_ticket_status_change' pk=pre_ticket.pre_ticket_id %}" type="text" class="button-active" type="button">Procesar</a></td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <div>
+            <h3>No hay Pre Tickets pendientes de ser procesados...</h3>
+        </div>
+    {% endif %}
+    </div>

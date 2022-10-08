@@ -1,3 +1,4 @@
+#TODO: Importar esto desde un local setting
 DEFAULT_PATH = "C:/Users/nanre/Documents/DirComUploads"
 
 

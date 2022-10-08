@@ -15,7 +15,7 @@ class PreTicket(models.Model):
     creation_date = models.DateTimeField(default=datetime.now())
 
     def __str__(self):
-        self.first_name + self.last_name + self.mail
+        return str(self.first_name) + self.last_name + self.mail
 
 
 class UploadFiles(models.Model):
@@ -25,4 +25,5 @@ class UploadFiles(models.Model):
     # id_ticket = id_pre_ticket = models.ForeignKey(Ticket)
     file_path = models.CharField(max_length=300, null=False, default="")
     file_name = models.CharField(max_length=100)
+
 
