@@ -63,7 +63,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "DirCom.urls"
+ROOT_URLCONF = "dircom.urls"
 
 TEMPLATES = [
     {
@@ -81,7 +81,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "DirCom.wsgi.application"
+WSGI_APPLICATION = "dircom.wsgi.application"
 
 
 # Database
