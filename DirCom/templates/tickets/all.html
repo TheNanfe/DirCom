@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    Tickets
+{% endblock title %}
+
+
+
+{% block content %}
+    {% include 'includes/header.html' %}
+
+    <div class="container">
+        <h1>Tickets</h1>
+
+        {% for ticket in tickets %}
+        <ul>
+            <li><a href="{% url 'tickets_app:detail' ticket.id %}">{{ ticket.id }} - {{ ticket.title }}</a></li>
+        </ul>
+        {% endfor %}
+    </div>
+{% endblock content %}

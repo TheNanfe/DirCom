@@ -4,3 +4,4 @@ dircom_venv/
 env.json
 #Ignora los pycache
 __pycache__
+dircom/static/uploads
