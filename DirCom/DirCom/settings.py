@@ -46,6 +46,7 @@ DJANGO_APPS = [
 LOCAL_APPS = [
     'applications.users',
     'applications.core',
+    'applications.tickets',
 ]
 
 THIRD_PARTY_APPS = []
@@ -141,3 +142,7 @@ STATICFILES_DIRS = [ str(BASE_DIR / "static") ]
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = 'users.User'
+
+# Manejo de imágenes
+MEDIA_URL = "uploads/" # link visible en el browser
+MEDIA_ROOT = str(BASE_DIR / "static/uploads") # carpeta donde se guardan las subidas
