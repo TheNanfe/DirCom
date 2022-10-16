@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    Nuevo ticket
+{% endblock title %}
+
+
+
+{% block content %}
+    {% include 'includes/header.html' %}
+
+    <div class="container">
+        <h1>Crear ticket</h1>
+
+        {{ form.as_p }}
+    </div>
+{% endblock content %}
