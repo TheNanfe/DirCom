@@ -8,17 +8,8 @@ class Category(models.Model):
     class Meta:
         verbose_name = "categoría"
 
-
-class Comment(models.Model):
-    content = models.TextField("contenido")
-    file = models.ImageField(
-        "archivo adjunto", upload_to="files", blank=True, null=True
-    )
-    created_at = models.DateTimeField("creado", auto_now_add=True)
-
-    class Meta:
-        verbose_name = "comentario"
-        ordering = ["-created_at"]
+    def __str__(self):
+        return f"{self.title}"
 
 
 class Ticket(models.Model):
@@ -51,9 +42,6 @@ class Ticket(models.Model):
         blank=True,
         null=True,
     )
-    comments = models.ManyToManyField(
-        Comment, verbose_name="comentarios", related_name="comments", blank=True
-    )
     email = models.EmailField("correo electrónico", max_length=254)
     title = models.CharField("título", max_length=150)
     content = models.TextField("contenido")
@@ -74,3 +62,33 @@ class Ticket(models.Model):
 
     class Meta:
         verbose_name = "ticket"
+
+    def __str__(self):
+        return f"#{self.id}: {self.title}"
+
+
+class Comment(models.Model):
+    user = models.ForeignKey(
+        User,
+        verbose_name="autor",
+        related_name="user_comments",
+        on_delete=models.CASCADE,
+    )
+    ticket = models.ForeignKey(
+        Ticket,
+        verbose_name="ticket",
+        related_name="ticket_comments",
+        on_delete=models.CASCADE,
+    )
+    content = models.TextField("contenido")
+    file = models.ImageField(
+        "archivo adjunto", upload_to="files", blank=True, null=True
+    )
+    created_at = models.DateTimeField("creado", auto_now_add=True)
+
+    class Meta:
+        verbose_name = "comentario"
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"#{self.id} - {self.user} - Ticket: #{self.ticket.id}"

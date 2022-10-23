@@ -1,11 +1,11 @@
 from django.shortcuts import redirect, render
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .models import Ticket
-from .forms import AddTicketForm
+from .models import Comment, Ticket
+from .forms import AddTicketForm, AddCommentForm
 
 
 class AllTicketsView(LoginRequiredMixin, ListView):
@@ -29,7 +29,7 @@ class DetailTicketView(LoginRequiredMixin, DetailView):
 
 class CreateTicketView(LoginRequiredMixin, FormView):
     form_class = AddTicketForm
-    success_url = "/"
+    success_url = reverse_lazy("tickets_app:all")
     template_name = "tickets/create.html"
     login_url = reverse_lazy("users_app:login")
 
@@ -47,5 +47,25 @@ class CreateTicketView(LoginRequiredMixin, FormView):
             content=form.cleaned_data["content"],
             file=form.cleaned_data["file"],
             category=form.cleaned_data["category"],
+        )
+        return super().form_valid(form)
+
+
+class CreateCommentView(LoginRequiredMixin, FormView):
+    form_class = AddCommentForm
+    template_name = "tickets/comment.html"
+    login_url = reverse_lazy("users_app:login")
+
+    def get_success_url(self, **kwargs):
+        ticket = self.kwargs.get('ticket_id')
+        url = reverse('tickets_app:detail', kwargs={'pk': ticket})
+        return url
+
+    def form_valid(self, form):
+        Comment.objects.create(
+            user=self.request.user,
+            ticket=Ticket.objects.get(pk=self.kwargs['ticket_id']),
+            content=form.cleaned_data["content"],
+            file=form.cleaned_data["file"],
         )
         return super().form_valid(form)

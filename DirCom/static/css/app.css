@@ -56,3 +56,15 @@ li {
 .preserve-linebreaks {
     white-space: pre-wrap;
 }
+
+.new-tab-icon {
+    width: 18px;
+    position: absolute;
+    bottom: -100%;
+    right: -13px;
+    color: #EB5757;
+}
+
+.position-relative:hover .new-tab-icon {
+    color: #bc0e0e;
+}

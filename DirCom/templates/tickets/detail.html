@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static%}
 
 
 {% block title %}
@@ -28,26 +29,29 @@
             Categoría: {{ ticket.category.title }}
         </p>
         <p class="preserve-linebreaks" readonly>{{ ticket.content }}</p>
-        <p>
-            <strong>Archivo adjunto:</strong>
-            <a href="{{ticket.file.url}}" target="_BLANK">
-                <img class="d-inline-block mx-4 rounded" src="{{ticket.file.url}}" width="50" />
-            </a>
-        </p>
+        {% if ticket.file.url is not null %}
+            <p>
+                <strong>Archivo adjunto:</strong>
+                <a href="{{ticket.file.url}}" target="_BLANK" class="position-relative">
+                    <img class="d-inline-block ms-4 rounded" src="{{ticket.file.url}}" width="50" />
+                    <svg class="new-tab-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 345.89 345.89"><path fill="currentColor" class="cls-1" d="M52.32,48.88c68.42-66.51,178.19-64.95,244.69,3.46,66.51,68.42,64.96,178.18-3.46,244.69s-173.56,64.95-240.42,.72L192.19,163.1l-.67,47.5,11.93,.17,.96-67.82-69-.98-.17,11.93,48.6,.69L44.81,289.2C-17.51,220.56-14.66,114,52.32,48.88Z"/></svg>
+                </a>
+            </p>
+        {% endif %}
         <hr class="my-5">
-        <div>
+        <div class="mb-5 pb-5">
             <div class="d-block d-md-flex justify-content-between">
                 <h3 class="text-center text-md-left mb-4">Comentarios</h3>
-                <a href="#" class="d-block d-md-inline btn btn-primary mb-4">+ Agregar nuevo comentario</a>
+                <a href="{% url 'tickets_app:comment' ticket.id %}" class="d-block d-md-inline btn btn-primary mb-4">+ Agregar nuevo comentario</a>
             </div>
 
-            {% for comment in ticket.comments.all %}
+            {% for comment in ticket.ticket_comments.all %}
                 <li class="bg-light rounded px-4 py-2 mb-4 mw-600">
                     <p class="preserve-linebreaks">{{ comment.content }}</p>
                     {% if comment.file.url is not null %}
                     <img class="d-block" src="{{comment.file.url}}" width="300" />
                     {% endif %}
-                    <small class="text-muted">{{ comment.created_at }}</small>
+                    <small class="text-muted">{{ comment.created_at }} • {{ comment.user }}</small>
                 </li>
             {% empty %}
                 <li>Este ticket aún no tiene comentarios.</li>
