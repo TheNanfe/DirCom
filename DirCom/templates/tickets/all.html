@@ -11,11 +11,26 @@
     {% include 'includes/header.html' %}
 
     <div class="container">
-        <h1>Tickets</h1>
+        <h1 class="mb-5">Tu historial de tickets</h1>
 
         {% for ticket in tickets %}
         <ul>
-            <li><a href="{% url 'tickets_app:detail' ticket.id %}">{{ ticket.id }} - {{ ticket.title }}</a></li>
+            <li>
+                <a 
+                    href="{% url 'tickets_app:detail' ticket.id %}" 
+                    class="text-decoration-none text-dark d-block px-4 py-2 border border-light rounded hover-gray"
+                >
+                    Ticket #{{ ticket.id }}: {{ ticket.title }} 
+                    <span class="badge
+                        {%if ticket.status == 1 %} {{ 'bg-warning' }} {% endif %}
+                        {%if ticket.status == 2 %} {{ 'bg-info' }} {% endif %}
+                        {%if ticket.status == 3 %} {{ 'bg-info' }} {% endif %}
+                        {%if ticket.status == 4 %} {{ 'bg-success' }} {% endif %}
+                        {%if ticket.status == 5 %} {{ 'bg-danger' }} {% endif %}
+                    ">{{ ticket.get_status_display }}</span><br>
+                    <small class="text-muted">{{ ticket.created_at }}</small>
+                </a>
+            </li>
         </ul>
         {% endfor %}
     </div>

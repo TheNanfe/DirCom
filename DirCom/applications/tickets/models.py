@@ -24,6 +24,7 @@ class Ticket(models.Model):
         (2, "Aprobado"),
         (3, "En curso"),
         (4, "Finalizado"),
+        (5, "Rechazado"),
     )
 
     URGENCY_CHOICES = (
@@ -35,7 +36,7 @@ class Ticket(models.Model):
 
     user = models.ForeignKey(User, verbose_name="autor", related_name="user_tickets", on_delete=models.CASCADE)
     agent = models.ForeignKey(User, verbose_name="agente", related_name="agent_tickets", on_delete=models.CASCADE, blank=True, null=True)
-    comments = models.ManyToManyField(Comment, verbose_name="comentarios", related_name="comments")
+    comments = models.ManyToManyField(Comment, verbose_name="comentarios", related_name="comments", blank=True)
     email = models.EmailField("correo electrónico", max_length=254) 
     title = models.CharField("título", max_length=150)
     content = models.TextField("contenido")
