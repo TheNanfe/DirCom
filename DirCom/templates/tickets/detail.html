@@ -11,6 +11,47 @@
     {% include 'includes/header.html' %}
 
     <div class="container">
+        <h2 class="small text-muted">Ticket #{{ticket.id}}</h2>
         <h1>{{ticket.title}}</h1>
+        <p>
+            <small class="text-muted">Enviado el {{ ticket.created_at }}</small>
+            <span class="badge
+                {%if ticket.status == 1 %} {{ 'bg-warning' }} {% endif %}
+                {%if ticket.status == 2 %} {{ 'bg-info' }} {% endif %}
+                {%if ticket.status == 3 %} {{ 'bg-info' }} {% endif %}
+                {%if ticket.status == 4 %} {{ 'bg-success' }} {% endif %}
+                {%if ticket.status == 5 %} {{ 'bg-danger' }} {% endif %}
+            ">{{ ticket.get_status_display }}</span>
+        </p>
+        <hr class="mb-5">
+        <p>
+            Categoría: {{ ticket.category.title }}
+        </p>
+        <p class="preserve-linebreaks" readonly>{{ ticket.content }}</p>
+        <p>
+            <strong>Archivo adjunto:</strong>
+            <a href="{{ticket.file.url}}" target="_BLANK">
+                <img class="d-inline-block mx-4 rounded" src="{{ticket.file.url}}" width="50" />
+            </a>
+        </p>
+        <hr class="my-5">
+        <div>
+            <div class="d-block d-md-flex justify-content-between">
+                <h3 class="text-center text-md-left mb-4">Comentarios</h3>
+                <a href="#" class="d-block d-md-inline btn btn-primary mb-4">+ Agregar nuevo comentario</a>
+            </div>
+
+            {% for comment in ticket.comments.all %}
+                <li class="bg-light rounded px-4 py-2 mb-4 mw-600">
+                    <p class="preserve-linebreaks">{{ comment.content }}</p>
+                    {% if comment.file.url is not null %}
+                    <img class="d-block" src="{{comment.file.url}}" width="300" />
+                    {% endif %}
+                    <small class="text-muted">{{ comment.created_at }}</small>
+                </li>
+            {% empty %}
+                <li>Este ticket aún no tiene comentarios.</li>
+            {% endfor %}
+        </div>
     </div>
 {% endblock content %}

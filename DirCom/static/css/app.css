@@ -52,3 +52,7 @@ li {
 .hover-gray:hover {
     background-color: #f7f7ff;
 }
+
+.preserve-linebreaks {
+    white-space: pre-wrap;
+}

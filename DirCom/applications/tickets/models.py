@@ -11,11 +11,14 @@ class Category(models.Model):
 
 class Comment(models.Model):
     content = models.TextField("contenido")
-    file = models.ImageField("archivo adjunto", upload_to="files", blank=True, null=True)
+    file = models.ImageField(
+        "archivo adjunto", upload_to="files", blank=True, null=True
+    )
     created_at = models.DateTimeField("creado", auto_now_add=True)
 
     class Meta:
         verbose_name = "comentario"
+        ordering = ["-created_at"]
 
 
 class Ticket(models.Model):
@@ -34,16 +37,38 @@ class Ticket(models.Model):
         (4, "Baja"),
     )
 
-    user = models.ForeignKey(User, verbose_name="autor", related_name="user_tickets", on_delete=models.CASCADE)
-    agent = models.ForeignKey(User, verbose_name="agente", related_name="agent_tickets", on_delete=models.CASCADE, blank=True, null=True)
-    comments = models.ManyToManyField(Comment, verbose_name="comentarios", related_name="comments", blank=True)
-    email = models.EmailField("correo electrónico", max_length=254) 
+    user = models.ForeignKey(
+        User,
+        verbose_name="autor",
+        related_name="user_tickets",
+        on_delete=models.CASCADE,
+    )
+    agent = models.ForeignKey(
+        User,
+        verbose_name="agente",
+        related_name="agent_tickets",
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+    )
+    comments = models.ManyToManyField(
+        Comment, verbose_name="comentarios", related_name="comments", blank=True
+    )
+    email = models.EmailField("correo electrónico", max_length=254)
     title = models.CharField("título", max_length=150)
     content = models.TextField("contenido")
-    file = models.ImageField("archivo adjunto", upload_to="files", blank=True, null=True)
-    category = models.ForeignKey(Category, verbose_name="categoría", on_delete=models.CASCADE)
-    status = models.PositiveSmallIntegerField("estado", choices=STATUS_CHOICES, default=STATUS_CHOICES[0][0])
-    urgency = models.PositiveSmallIntegerField("urgencia", choices=URGENCY_CHOICES, default=URGENCY_CHOICES[2][0])
+    file = models.ImageField(
+        "archivo adjunto", upload_to="files", blank=True, null=True
+    )
+    category = models.ForeignKey(
+        Category, verbose_name="categoría", on_delete=models.CASCADE
+    )
+    status = models.PositiveSmallIntegerField(
+        "estado", choices=STATUS_CHOICES, default=STATUS_CHOICES[0][0]
+    )
+    urgency = models.PositiveSmallIntegerField(
+        "urgencia", choices=URGENCY_CHOICES, default=URGENCY_CHOICES[2][0]
+    )
     created_at = models.DateTimeField("creado", auto_now_add=True)
     updated_at = models.DateTimeField("último cambio", auto_now=True)
 
