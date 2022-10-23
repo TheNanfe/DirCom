@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, TemplateView
 from django.views.generic.edit import FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -29,7 +29,7 @@ class DetailTicketView(LoginRequiredMixin, DetailView):
 
 class CreateTicketView(LoginRequiredMixin, FormView):
     form_class = AddTicketForm
-    success_url = reverse_lazy("tickets_app:all")
+    success_url = reverse_lazy("tickets_app:thanks")
     template_name = "tickets/create.html"
     login_url = reverse_lazy("users_app:login")
 
@@ -69,3 +69,7 @@ class CreateCommentView(LoginRequiredMixin, FormView):
             file=form.cleaned_data["file"],
         )
         return super().form_valid(form)
+
+
+class ThanksView(LoginRequiredMixin, TemplateView):
+    template_name = "tickets/thanks.html"

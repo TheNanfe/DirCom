@@ -12,6 +12,7 @@
     {% include 'includes/header.html' %}
 
     <div class="container">
+        <p class="mb-3"><a class="text-decoration-none" href="{% url 'tickets_app:all' %}">< Volver</a></p>
         <h2 class="small text-muted">Ticket #{{ticket.id}}</h2>
         <h1>{{ticket.title}}</h1>
         <p>
