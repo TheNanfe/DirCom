@@ -154,6 +154,8 @@ class UpdatePasswordForm(forms.Form):
     def __init__(self, user, *args, **kwargs):
         super(UpdatePasswordForm, self).__init__(*args, **kwargs)
         self.user = user
+        for visible in self.visible_fields():
+            visible.field.widget.attrs["class"] = "form-control"
 
     def clean(self):
         """método para validar las credenciales del usuario"""
