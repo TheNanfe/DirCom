@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import View, CreateView, UpdateView
+from django.views.generic import View, CreateView, UpdateView, TemplateView
 from django.views.generic.edit import FormView
 from django.urls import reverse_lazy, reverse
 # django.contrib.auth es el módulo que nos permite implementar
@@ -122,3 +122,7 @@ class UpdatePasswordView(LoginRequiredMixin, FormView):
 
         logout(self.request)
         return super(UpdatePasswordView, self).form_valid(form)
+
+
+class MyProfileView(LoginRequiredMixin, TemplateView):
+    template_name = "users/profile.html"

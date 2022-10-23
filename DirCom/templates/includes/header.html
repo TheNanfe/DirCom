@@ -7,7 +7,7 @@
     <ul class="nav nav-pills">
         <li class="nav-item"><a class="btn btn-primary" href="{% url 'tickets_app:create' %}" class="nav-link">Enviar ticket</a></li>
         <li class="nav-item"><a href="{% url 'tickets_app:all' %}" class="nav-link">Historial</a></li>
-        <li class="nav-item"><a href="#" class="nav-link">Mi Perfil</a></li>
+        <li class="nav-item"><a href="{% url 'users_app:profile' %}" class="nav-link">Mi Perfil</a></li>
         <li class="nav-item"><a href="{% url 'users_app:logout' %}" class="nav-link">Salir</a></li>
     </ul>
     </header>

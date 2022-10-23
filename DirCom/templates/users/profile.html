@@ -1,0 +1,41 @@
+{% extends 'base.html' %} 
+{% load static %}
+
+{% block title %} Mi perfil {% endblock title %} 
+
+{% block content %} 
+    {% include 'includes/header.html' %}
+
+    <div class="container d-flex">
+        <div class="w-25">
+            <div 
+                class="profile-pic" 
+                {% if user.persona.profile_picture.url is not null %}
+                style="background-image: url({{ user.persona.profile_picture.url }});"
+                {% else %}
+                style="background-image: url({% static 'img/profile.png' %});"
+                {% endif %}
+            ></div>
+            <h2 class="text-center mt-3">{{ user.persona.first_name }} {{ user.persona.last_name }}</h2>
+            <h5 class="text-muted fw-normal text-center">@{{ user.username }}</h5>
+            <p class="text-center"><a href="#">Editar mi información</a></p>
+        </div>
+        <div class="w-75 ps-5">
+            <h2>Tu información:</h2>
+            <ul class="mt-3">
+                <li><strong>Nro de cédula:</strong> {{ user.persona.gov_id }}</li>
+                <li><strong>Correo electrónico:</strong> {{ user.persona.email }}</li>
+                <li><strong>Ciudad:</strong> {{ user.persona.city }}</li>
+                <li><strong>Nro de teléfono:</strong> {{ user.persona.phone }}</li>
+                <li><strong>Dependencia:</strong> {{ user.persona.area }}</li>
+                <li><strong>Tipo de vinculación:</strong> {{ user.persona.get_vinc_type_display }}</li>
+            </ul>
+            <hr class="my-5" />
+            <h2>Tu actividad</h2>
+            <ul class="mt-3">
+                <li><strong>Tickets enviados:</strong> {{ user.user_tickets.count }}</li>
+                <li><strong>Comentarios enviados:</strong> {{ user.user_comments.count }}</li>
+            </ul>
+        </div>
+    </div>
+{% endblock content %}

@@ -68,3 +68,12 @@ li {
 .position-relative:hover .new-tab-icon {
     color: #bc0e0e;
 }
+
+.profile-pic {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto;
+    border-radius: 50%;
+    background-position: center center;
+    background-size: cover;
+}

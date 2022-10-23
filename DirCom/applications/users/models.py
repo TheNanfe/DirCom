@@ -13,7 +13,10 @@ class Persona(models.Model):
 
     VINC_CHOICES = (("1", "Contratado"), ("2", "Permanente"),)
 
-    gov_id = models.CharField("documento de identidad", max_length=50, unique=True) 
+    gov_id = models.CharField("documento de identidad", max_length=50, unique=True)
+    profile_picture = models.ImageField(
+        "foto de perfil", upload_to="profiles", blank=True, null=True
+    ) 
     email = models.EmailField("correo electrónico", max_length=254, unique=True) 
     first_name = models.CharField("nombres", blank=True, null=True, max_length=150)
     last_name = models.CharField("apellidos", blank=True, null=True, max_length=150)
