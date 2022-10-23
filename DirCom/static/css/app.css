@@ -36,3 +36,7 @@
     background-color: #EB5757 !important;
     color: #FFF !important;
 }
+
+.mw-600 {
+    max-width: 600px;
+}
