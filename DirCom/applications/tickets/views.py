@@ -14,10 +14,18 @@ class AllTicketsView(LoginRequiredMixin, ListView):
     login_url = reverse_lazy("users_app:login")
 
     def get_queryset(self) :
+        title = self.request.GET.get('title', '')
         if(self.request.user.role == 3):
-            return Ticket.objects.filter(user=self.request.user)
+            tickets = Ticket.objects.filter(user=self.request.user)
         else: 
-            return Ticket.objects.all()
+            tickets = Ticket.objects.all()
+        filtered = tickets.filter(title__contains=title)
+        return filtered
+
+    def get_context_data(self, **kwargs):
+        context = super(AllTicketsView, self).get_context_data(**kwargs)
+        context['title'] = self.request.GET.get('title', '')
+        return context
 
 
 class DetailTicketView(LoginRequiredMixin, DetailView):
