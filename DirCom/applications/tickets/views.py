@@ -14,7 +14,7 @@ class AllTicketsView(LoginRequiredMixin, ListView):
     login_url = reverse_lazy("users_app:login")
 
     def get_queryset(self) :
-        if(self.request.user.role == 4): # cambiar por 3
+        if(self.request.user.role == 3):
             return Ticket.objects.filter(user=self.request.user)
         else: 
             return Ticket.objects.all()
@@ -34,7 +34,7 @@ class CreateTicketView(LoginRequiredMixin, FormView):
     login_url = reverse_lazy("users_app:login")
 
     def dispatch(self, request, *args, **kwargs):
-        if(request.user.role != 4): # cambiar a 3 después
+        if(request.user.role != 3): 
             return redirect("core_app:home")
         else:
             return super(CreateTicketView, self).dispatch(request, *args, **kwargs)

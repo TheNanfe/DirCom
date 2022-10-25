@@ -17,8 +17,7 @@
             <form method="POST">
                 {% csrf_token %}
                 {{ form.as_p }}
-                <div class="d-flex justify-content-between">
-                    <a href="{% url 'users_app:add_persona' %}">Registrarme</a>
+                <div class="d-flex justify-content-end">
                     <a href="#">Recuperar contraseña</a>
                 </div>
                 <div class="mt-3">

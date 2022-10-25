@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.views.generic import View, CreateView, UpdateView, TemplateView
 from django.views.generic.edit import FormView
 from django.urls import reverse_lazy, reverse
@@ -20,7 +20,13 @@ from .models import User, Persona
 class PersonaRegisterView(CreateView):
     form_class = AddPersonaForm
     template_name = 'users/add_persona.html'
-    success_url = reverse_lazy('core_app:home')
+    success_url = reverse_lazy('users_app:register')
+
+    def dispatch(self, request, *args, **kwargs):
+        if(request.user.role != 1): 
+            return redirect("core_app:home")
+        else:
+            return super(PersonaRegisterView, self).dispatch(request, *args, **kwargs)
 
 
 class PersonaUpdateProfileView(LoginRequiredMixin, UpdateView):
@@ -50,6 +56,12 @@ class UserRegisterView(FormView):
     template_name = "users/register.html"
     form_class = UserRegisterForm
     success_url = "/"
+
+    def dispatch(self, request, *args, **kwargs):
+        if(request.user.role != 1): 
+            return redirect("core_app:home")
+        else:
+            return super(PersonaRegisterView, self).dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
         # llamamos al método create_user que sobreescribimos

@@ -17,11 +17,8 @@
             <form method="POST">
                 {% csrf_token %}
                 {{ form.as_p }}
-                <div class="d-flex justify-content-end">
-                    <a href="{% url 'users_app:login' %}">Ya tengo una cuenta</a>
-                </div>
                 <div class="mt-3">
-                    <button class="btn btn-red btn-block" type="submit">Ingresar</button>
+                    <button class="btn btn-red btn-block" type="submit">Crear persona</button>
                 </div>
             </form>
         </div>

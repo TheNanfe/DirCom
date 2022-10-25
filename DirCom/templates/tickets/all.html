@@ -32,6 +32,10 @@
                 </a>
             </li>
         </ul>
+        {% empty %}
+        <div>
+            <p class="text-center">No tienes tickets aún, <a href="{% url 'tickets_app:create' %}">crea uno aquí</a>.</p>
+        </div>
         {% endfor %}
     </div>
 {% endblock content %}

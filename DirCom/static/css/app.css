@@ -45,6 +45,15 @@ li {
     color: #FFF !important;
 }
 
+.header-icon {
+    width: 20px;
+    color: #EB5757;
+}
+
+.header-icon:hover {
+    color: #bc0e0e;
+}
+
 .mw-600 {
     max-width: 600px;
 }
@@ -80,4 +89,8 @@ li {
 
 .full-screen {
     min-height: calc(100vh - 180px);
+}
+
+.errorlist {
+    color: #EB5757;
 }
