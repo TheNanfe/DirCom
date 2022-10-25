@@ -49,9 +49,7 @@ LOCAL_APPS = [
     'applications.tickets',
 ]
 
-THIRD_PARTY_APPS = [
-    'django_filters',
-]
+THIRD_PARTY_APPS = []
 
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
 
