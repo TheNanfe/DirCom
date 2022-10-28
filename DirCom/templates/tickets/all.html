@@ -22,7 +22,8 @@
         <ul>
             <li>
                 <a 
-                    href="{% url 'tickets_app:detail' ticket.id %}" 
+                    {% if user.role == 3 %} href="{% url 'tickets_app:detail' ticket.id %}"  {% endif %}
+                    {% if user.role != 3 %} href="{% url 'tickets_app:edit' ticket.id %}"  {% endif %}
                     class="text-decoration-none text-dark d-block px-4 py-2 border border-light rounded hover-gray"
                 >
                     Ticket #{{ ticket.id }}: {{ ticket.title }} 
@@ -33,7 +34,10 @@
                         {%if ticket.status == 4 %} {{ 'bg-success' }} {% endif %}
                         {%if ticket.status == 5 %} {{ 'bg-danger' }} {% endif %}
                     ">{{ ticket.get_status_display }}</span><br>
-                    <small class="text-muted">{{ ticket.created_at }}</small>
+                    <small class="text-muted">
+                        {{ ticket.created_at }} 
+                        {% if user.role != 3 %} • {{ ticket.user }}{% endif %}
+                    </small>
                 </a>
             </li>
         </ul>

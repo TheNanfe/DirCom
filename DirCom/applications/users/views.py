@@ -61,7 +61,7 @@ class UserRegisterView(FormView):
         if(request.user.role != 1): 
             return redirect("core_app:home")
         else:
-            return super(PersonaRegisterView, self).dispatch(request, *args, **kwargs)
+            return super(UserRegisterView, self).dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
         # llamamos al método create_user que sobreescribimos
