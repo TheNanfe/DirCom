@@ -62,6 +62,7 @@ class CreateTicketView(LoginRequiredMixin, FormView):
 class EditTicketView(LoginRequiredMixin, UpdateView):
     model = Ticket
     template_name = "tickets/edit.html"
+    success_url = reverse_lazy("tickets_app:all")
     login_url = reverse_lazy("users_app:login")
 
     def get_form_class(self):
