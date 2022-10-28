@@ -18,7 +18,8 @@
             ></div>
             <h2 class="text-center mt-3">{{ user.persona.first_name }} {{ user.persona.last_name }}</h2>
             <h5 class="text-muted fw-normal text-center">@{{ user.username }}</h5>
-            <p class="text-center"><a href="#">Editar mi información</a></p>
+            <p class="text-center mb-1"><a href="#">Editar mi información</a></p>
+            <p class="text-center"><a href="{% url 'users_app:password' %}">Cambiar contraseña</a></p>
         </div>
         <div class="w-75 ps-5">
             <h2>Tu información:</h2>
