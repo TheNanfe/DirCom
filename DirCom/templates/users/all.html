@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    Usuarios
+{% endblock title %}
+
+
+{% block content %}
+    {% include 'includes/header.html' %}
+    <div class="container mb-5">
+        <h1 class="mb-4">Todos los usuarios</h1>
+        {% for user in users %}
+        <ul>
+            <li>
+                <a 
+                    href="{% url 'users_app:detail' user.username %}"
+                    class="text-decoration-none text-dark d-block px-4 py-2 border border-light rounded hover-gray"
+                >
+                    <span class="fw-bold">{{ user.persona }}</span>
+                    ({{ user }})
+                    <span class="badge
+                        {%if user.role == 1 %} {{ 'bg-warning' }} {% endif %}
+                        {%if user.role == 2 %} {{ 'bg-info' }} {% endif %}
+                        {%if user.role == 3 %} {{ 'bg-success' }} {% endif %}
+                        {%if user.role == 4 %} {{ 'bg-secondary' }} {% endif %}
+                    ">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="#ffffff" width="10" style="margin-top: -3px; margin-right: 5px" viewBox="0 0 448 512">
+                            <path d="M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0S96 57.3 96 128s57.3 128 128 128zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"/>
+                        </svg>
+                        {{ user.get_role_display }}
+                    </span>
+                    <span class="badge
+                        {%if user.is_active %} 
+                            {{ 'bg-primary' }} 
+                        {% else %}
+                            {{ 'bg-secondary' }}
+                        {% endif %}
+                    ">
+                        {%if user.is_active %} 
+                            Activo
+                        {% else %}
+                            Inactivo
+                        {% endif %}
+                    </span>
+                    <br>
+                    <small class="text-muted">
+                        Desde {{ user.date_joined }} 
+                    </small>
+                </a>
+            </li>
+        </ul>
+        {% endfor %}
+    </div>
+{% endblock content %}

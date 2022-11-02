@@ -66,3 +66,4 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     class Meta:
         verbose_name = "usuario"
+        ordering = ["-date_joined"]
