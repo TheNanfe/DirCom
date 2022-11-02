@@ -15,10 +15,9 @@ class Category(models.Model):
 class Ticket(models.Model):
     STATUS_CHOICES = (
         (1, "Pendiente"),
-        (2, "Aprobado"),
-        (3, "En curso"),
-        (4, "Finalizado"),
-        (5, "Rechazado"),
+        (2, "En curso"),
+        (3, "Finalizado"),
+        (4, "Rechazado"),
     )
 
     URGENCY_CHOICES = (

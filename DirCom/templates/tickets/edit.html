@@ -41,4 +41,17 @@
             </div>
         </div>
     </div>
+
+    {% if user.role != 1 %}
+        <script>
+            document.addEventListener("DOMContentLoaded", function(event) {
+                const choices = document.querySelectorAll("#id_status option")
+                const arr = Array.from(choices)
+                console.log(arr)
+                arr.forEach(choice => {
+                    if(choice.value === "1" || choice.value === "4") choice.remove()
+                })
+            });
+        </script>
+    {% endif %}
 {% endblock content %}
