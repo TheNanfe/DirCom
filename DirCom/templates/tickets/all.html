@@ -18,9 +18,9 @@
             <button class="btn btn-primary ms-2" type="submit">Buscar</button>
         </form>
 
-        {% for ticket in tickets %}
         <ul>
-            <li>
+        {% for ticket in tickets %}
+            <li class="mb-2">
                 <a 
                     {% if user.role == 3 %} href="{% url 'tickets_app:detail' ticket.id %}"  {% endif %}
                     {% if user.role != 3 %} href="{% url 'tickets_app:edit' ticket.id %}"  {% endif %}
@@ -75,11 +75,11 @@
                     </small>
                 </a>
             </li>
-        </ul>
         {% empty %}
-        <div>
+        <li>
             <p class="text-center">No tienes tickets aún, <a href="{% url 'tickets_app:create' %}">crea uno aquí</a>.</p>
-        </div>
+        </li>
         {% endfor %}
+        </ul>
     </div>
 {% endblock content %}

@@ -10,9 +10,10 @@
     {% include 'includes/header.html' %}
     <div class="container mb-5">
         <h1 class="mb-4">Todos los usuarios</h1>
-        {% for user in users %}
+
         <ul>
-            <li>
+        {% for user in users %}
+            <li class="mb-2">
                 <a 
                     href="{% url 'users_app:detail' user.username %}"
                     class="text-decoration-none text-dark d-block px-4 py-2 border border-light rounded hover-gray"
@@ -49,7 +50,7 @@
                     </small>
                 </a>
             </li>
-        </ul>
         {% endfor %}
+        <ul>
     </div>
 {% endblock content %}
