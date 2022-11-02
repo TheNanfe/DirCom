@@ -15,10 +15,15 @@ class AllTicketsView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         title = self.request.GET.get("title", "")
+        # todos los tickets para el admin
+        if self.request.user.role == 1:
+            tickets = Ticket.objects.all()
+        # solo tickets asignados al analista
+        if self.request.user.role == 2:
+            tickets = Ticket.objects.filter(agent=self.request.user)
+        # solo tickets propios para el usuario
         if self.request.user.role == 3:
             tickets = Ticket.objects.filter(user=self.request.user)
-        else:
-            tickets = Ticket.objects.all()
         filtered = tickets.filter(title__contains=title)
         return filtered
 

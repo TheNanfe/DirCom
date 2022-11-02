@@ -33,10 +33,26 @@
                         {%if ticket.status == 3 %} {{ 'bg-info' }} {% endif %}
                         {%if ticket.status == 4 %} {{ 'bg-success' }} {% endif %}
                         {%if ticket.status == 5 %} {{ 'bg-danger' }} {% endif %}
-                    ">{{ ticket.get_status_display }}</span><br>
+                    ">{{ ticket.get_status_display }}</span>
+                    {% if user.role != 3 %}
+                        <span class="badge
+                        {%if ticket.urgency == 1 %} {{ 'bg-danger' }} {% endif %}
+                        {%if ticket.urgency == 2 %} {{ 'bg-warning' }} {% endif %}
+                        {%if ticket.urgency == 3 %} {{ 'bg-info' }} {% endif %}
+                        {%if ticket.urgency == 4 %} {{ 'bg-success' }} {% endif %}
+                    ">{{ ticket.get_urgency_display }}</span>
+                    {% endif %}
+                    <br>
                     <small class="text-muted">
                         {{ ticket.created_at }} 
                         {% if user.role != 3 %} • {{ ticket.user }}{% endif %}
+                        {% if user.role == 1 %} 
+                            {% if ticket.agent %} 
+                                • <span class="text-success">Asignado a {{ ticket.agent }}</span> 
+                            {% else %} 
+                                • <span class="text-danger">no se ha asignado aún</span>
+                            {% endif %}
+                        {% endif %}
                     </small>
                 </a>
             </li>

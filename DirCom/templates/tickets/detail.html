@@ -24,6 +24,14 @@
                 {%if ticket.status == 4 %} {{ 'bg-success' }} {% endif %}
                 {%if ticket.status == 5 %} {{ 'bg-danger' }} {% endif %}
             ">{{ ticket.get_status_display }}</span>
+            {% if user.role != 3 %}
+                <span class="badge
+                {%if ticket.urgency == 1 %} {{ 'bg-danger' }} {% endif %}
+                {%if ticket.urgency == 2 %} {{ 'bg-warning' }} {% endif %}
+                {%if ticket.urgency == 3 %} {{ 'bg-info' }} {% endif %}
+                {%if ticket.urgency == 4 %} {{ 'bg-success' }} {% endif %}
+            ">{{ ticket.get_urgency_display }}</span>
+            {% endif %}
         </p>
         <hr class="mb-5">
         <p>

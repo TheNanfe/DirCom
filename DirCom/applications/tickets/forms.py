@@ -1,6 +1,7 @@
 from django import forms
 from django import forms
 from .models import Comment, Ticket
+from applications.users.models import User
 
 
 class AddTicketForm(forms.ModelForm):
@@ -37,6 +38,7 @@ class AdminEditTicketForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(AdminEditTicketForm, self).__init__(*args, **kwargs)
+        self.fields['agent'].queryset = User.objects.filter(role=2)
         for visible in self.visible_fields():
             visible.field.widget.attrs["class"] = "form-control"
 
