@@ -166,6 +166,7 @@ class AllUsersView(LoginRequiredMixin, ListView):
     model = User
     template_name = "users/all.html"
     context_object_name = "users"
+    paginate_by = 10
     login_url = reverse_lazy("users_app:login")
 
     def dispatch(self, request, *args, **kwargs):

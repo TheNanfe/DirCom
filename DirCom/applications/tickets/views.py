@@ -12,6 +12,7 @@ from .forms import AddTicketForm, AddCommentForm, AdminEditTicketForm, EditTicke
 class AllTicketsView(LoginRequiredMixin, ListView):
     template_name = "tickets/all.html"
     context_object_name = "tickets"
+    paginate_by = 12
     login_url = reverse_lazy("users_app:login")
 
     def get_queryset(self):

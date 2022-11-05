@@ -61,6 +61,7 @@ class Ticket(models.Model):
 
     class Meta:
         verbose_name = "ticket"
+        ordering = ["-created_at"]
 
     def __str__(self):
         return f"#{self.id}: {self.title}"
