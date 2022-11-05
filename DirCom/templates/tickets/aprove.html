@@ -67,9 +67,9 @@
             </p>
         {% endif %}
         <hr class="my-3">
-        <div>
+        <div class="mb-5">
             <a 
-                href="{% url 'tickets_app:detail' ticket.id %}"
+                href="{% url 'tickets_app:aprove' ticket.id %}"
                 class="btn btn-success me-2"
             >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="#ffffff" width="18" style="margin: -3px -3px 0;" viewBox="0 0 512 512">
@@ -78,7 +78,7 @@
                 Aprobar ticket
             </a>
             <a 
-                href="{% url 'tickets_app:detail' ticket.id %}"
+                href="{% url 'tickets_app:reject' ticket.id %}"
                 class="btn btn-danger"
             >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="#ffffff" width="12" viewBox="0 0 320 512">

@@ -11,12 +11,21 @@
 {% block content %}
     {% include 'includes/header.html' %}
 
+    {% if ticket.rejection_message %}
+        <div class="container">
+            <div class="alert alert-danger" role="alert">
+                {{ ticket.rejection_message }}
+            </div>
+        </div>
+    {% endif %}
+
     <div class="container">
         <p class="mb-3"><a class="text-decoration-none" href="{% url 'tickets_app:all' %}">< Volver</a></p>
         <h2 class="small text-muted">Ticket #{{ticket.id}}</h2>
         <h1>{{ticket.title}}</h1>
         <p>
             <small class="text-muted">Enviado el {{ ticket.created_at }}</small>
+            {% if user.role != 3 %} <small class="text-muted"> • Autor {{ ticket.user.persona }}</small> {% endif %}
             <span class="badge
                 {%if ticket.status == 1 %} {{ 'bg-warning' }} {% endif %}
                 {%if ticket.status == 2 %} {{ 'bg-info' }} {% endif %}

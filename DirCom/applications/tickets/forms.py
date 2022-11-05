@@ -21,6 +21,7 @@ class AdminEditTicketForm(forms.ModelForm):
     class Meta:
         model = Ticket
         fields = "__all__"
+        exclude = ('rejection_message',)
         widgets = {
             "user": forms.Select(
                 attrs={"readonly": True}
@@ -43,13 +44,25 @@ class AdminEditTicketForm(forms.ModelForm):
             visible.field.widget.attrs["class"] = "form-control"
 
 
+class RejectionMessageForm(forms.ModelForm):
+
+    class Meta:
+        model = Ticket
+        fields = ["rejection_message"]
+
+    def __init__(self, *args, **kwargs):
+        super(RejectionMessageForm, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs["class"] = "form-control"
+
+
 class EditTicketForm(forms.ModelForm):
     field_order = ["status", "content", "email"]
 
     class Meta:
         model = Ticket
         fields = "__all__"
-        exclude = ["agent"]
+        exclude = ["agent", "rejection_message"]
         widgets = {
             "user": forms.Select(
                 attrs={"readonly": True}

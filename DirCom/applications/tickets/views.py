@@ -1,12 +1,19 @@
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
-from django.views.generic import ListView, DetailView, TemplateView, UpdateView
+from django.views.generic import ListView, DetailView, TemplateView, UpdateView, View
 from django.views.generic.edit import FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
+from django.http import HttpResponseRedirect
 
 from .models import Comment, Ticket
-from .forms import AddTicketForm, AddCommentForm, AdminEditTicketForm, EditTicketForm
+from .forms import (
+    AddTicketForm,
+    AddCommentForm,
+    AdminEditTicketForm,
+    EditTicketForm,
+    RejectionMessageForm,
+)
 
 
 class AllTicketsView(LoginRequiredMixin, ListView):
@@ -74,6 +81,75 @@ class AproveOrRejectTicketView(LoginRequiredMixin, DetailView):
     context_object_name = "ticket"
     login_url = reverse_lazy("users_app:login")
 
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.role != 1:
+            return redirect("core_app:home")
+        else:
+            return super(AproveOrRejectTicketView, self).dispatch(
+                request, *args, **kwargs
+            )
+
+
+class AproveTicketView(LoginRequiredMixin, View):
+    """vista para que el admin apruebe los tickets"""
+
+    login_url = reverse_lazy("users_app:login")
+
+    def get(self, request, *args, **kwargs):
+        pk = kwargs.get("pk", "default")
+        ticket = Ticket.objects.get(pk=pk)
+        ticket.status = 2
+        ticket.save()
+        return HttpResponseRedirect(reverse("tickets_app:edit", kwargs={"pk": pk}))
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.role != 1:
+            return redirect("core_app:home")
+        else:
+            return super(AproveTicketView, self).dispatch(
+                request, *args, **kwargs
+            )
+
+class RejectTicketView(LoginRequiredMixin, View):
+    """vista para que el admin rechace los tickets"""
+
+    login_url = reverse_lazy("users_app:login")
+
+    def get(self, request, *args, **kwargs):
+        pk = kwargs.get("pk", "default")
+        ticket = Ticket.objects.get(pk=pk)
+        ticket.status = 4
+        ticket.save()
+        return HttpResponseRedirect(reverse("tickets_app:reject_message", kwargs={"pk": pk}))
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.role != 1:
+            return redirect("core_app:home")
+        else:
+            return super(RejectTicketView, self).dispatch(
+                request, *args, **kwargs
+            )
+
+class RejectMessageTicketView(LoginRequiredMixin, UpdateView):
+    """vista para que el admin escriba el mensaje de motivo del rechazo"""
+
+    model = Ticket
+    template_name = "tickets/rejection_message.html"
+    login_url = reverse_lazy("users_app:login")
+    form_class = RejectionMessageForm
+
+    def get_success_url(self, **kwargs):
+        ticket = self.kwargs.get("pk")
+        url = reverse("tickets_app:detail", kwargs={"pk": ticket})
+        return url
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.role != 1:
+            return redirect("core_app:home")
+        else:
+            return super(RejectMessageTicketView, self).dispatch(
+                request, *args, **kwargs
+            )
 
 class EditTicketView(LoginRequiredMixin, UpdateView):
     model = Ticket
