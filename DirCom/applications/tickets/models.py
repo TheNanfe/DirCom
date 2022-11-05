@@ -56,6 +56,7 @@ class Ticket(models.Model):
     urgency = models.PositiveSmallIntegerField(
         "urgencia", choices=URGENCY_CHOICES, default=URGENCY_CHOICES[2][0]
     )
+    rejection_message = models.TextField("motivo del rechazo", blank=True, null=True)
     created_at = models.DateTimeField("creado", auto_now_add=True)
     updated_at = models.DateTimeField("último cambio", auto_now=True)
 

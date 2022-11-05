@@ -85,7 +85,7 @@
                 {% endif %}
             {% endfor %}
         </ul>
-        {% if tickets.count > 3 %}
+        {% if tickets.count > 2 %}
             {% if user.role == 3 %}
                 <div class="d-flex justify-content-center">
                     <a href="{% url 'tickets_app:all' %}" class="btn btn-primary">Ver todos tus tickets</a>

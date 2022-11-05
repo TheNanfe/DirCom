@@ -68,6 +68,13 @@ class CreateTicketView(LoginRequiredMixin, FormView):
         return super().form_valid(form)
 
 
+class AproveOrRejectTicketView(LoginRequiredMixin, DetailView):
+    model = Ticket
+    template_name = "tickets/aprove.html"
+    context_object_name = "ticket"
+    login_url = reverse_lazy("users_app:login")
+
+
 class EditTicketView(LoginRequiredMixin, UpdateView):
     model = Ticket
     template_name = "tickets/edit.html"

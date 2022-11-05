@@ -25,59 +25,89 @@
         <ul>
         {% for ticket in tickets %}
             <li class="mb-2">
-                <a 
-                    {% if user.role == 3 %} href="{% url 'tickets_app:detail' ticket.id %}"  {% endif %}
-                    {% if user.role != 3 %} href="{% url 'tickets_app:edit' ticket.id %}"  {% endif %}
-                    class="text-decoration-none text-dark d-block px-4 py-2 border border-light rounded hover-gray"
+                <div 
+                    {% comment %} {% if user.role == 3 %} href="{% url 'tickets_app:detail' ticket.id %}"  {% endif %}
+                    {% if user.role != 3 %} href="{% url 'tickets_app:edit' ticket.id %}"  {% endif %} {% endcomment %}
+                    class="text-dark px-4 py-2 border border-light rounded-2 hover-gray d-flex justify-content-between align-items-center"
                 >
-                    Ticket #{{ ticket.id }}: {{ ticket.title }} 
-                    <span class="badge
-                        {%if ticket.status == 1 %} {{ 'bg-warning' }} {% endif %}
-                        {%if ticket.status == 2 %} {{ 'bg-info' }} {% endif %}
-                        {%if ticket.status == 3 %} {{ 'bg-success' }} {% endif %}
-                        {%if ticket.status == 4 %} {{ 'bg-danger' }} {% endif %}
-                    ">
-                        {% if ticket.status == 4 %}
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="#ffffff" width="9" style="margin-top: -3px; margin-right: 5px" viewBox="0 0 320 512">
-                            <path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"/>
-                        </svg>
-                        {% elif ticket.status == 3 %}
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="#ffffff" width="14" style="margin-top: -3px; margin-right: 5px" viewBox="0 0 512 512">
-                            <path d="M470.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L192 338.7 425.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/>
-                        </svg>
-                        {% else %}
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="#ffffff" width="12" style="margin-top: -3px; margin-right: 5px" viewBox="0 0 512 512">
-                            <path d="M256 512C114.6 512 0 397.4 0 256S114.6 0 256 0S512 114.6 512 256s-114.6 256-256 256zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"/>
-                        </svg>
-                        {% endif %}
-                        {{ ticket.get_status_display }}
-                    </span>
-                    {% if user.role != 3 %}
+                    <div>
+                        Ticket #{{ ticket.id }}: {{ ticket.title }} 
                         <span class="badge
-                        {%if ticket.urgency == 1 %} {{ 'bg-danger' }} {% endif %}
-                        {%if ticket.urgency == 2 %} {{ 'bg-warning' }} {% endif %}
-                        {%if ticket.urgency == 3 %} {{ 'bg-info' }} {% endif %}
-                        {%if ticket.urgency == 4 %} {{ 'bg-success' }} {% endif %}
-                    ">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="#ffffff" width="12" style="margin-top: -3px; margin-right: 5px" viewBox="0 0 448 512">
-                        <path d="M159.3 5.4c7.8-7.3 19.9-7.2 27.7 .1c27.6 25.9 53.5 53.8 77.7 84c11-14.4 23.5-30.1 37-42.9c7.9-7.4 20.1-7.4 28 .1c34.6 33 63.9 76.6 84.5 118c20.3 40.8 33.8 82.5 33.8 111.9C448 404.2 348.2 512 224 512C98.4 512 0 404.1 0 276.5c0-38.4 17.8-85.3 45.4-131.7C73.3 97.7 112.7 48.6 159.3 5.4zM225.7 416c25.3 0 47.7-7 68.8-21c42.1-29.4 53.4-88.2 28.1-134.4c-2.8-5.6-5.6-11.2-9.8-16.8l-50.6 58.8s-81.4-103.6-87.1-110.6C133.1 243.8 112 273.2 112 306.8C112 375.4 162.6 416 225.7 416z"/>
-                    </svg>
-                        {{ ticket.get_urgency_display }}
-                    </span>
-                    {% endif %}
-                    <br>
-                    <small class="text-muted">
-                        {{ ticket.created_at }} 
-                        {% if user.role != 3 %} • {{ ticket.user }}{% endif %}
-                        {% if user.role == 1 %} 
-                            {% if ticket.agent %} 
-                                • <span class="text-success">Asignado a {{ ticket.agent }}</span> 
-                            {% else %} 
-                                • <span class="text-danger">no se ha asignado aún</span>
+                            {%if ticket.status == 1 %} {{ 'bg-warning' }} {% endif %}
+                            {%if ticket.status == 2 %} {{ 'bg-info' }} {% endif %}
+                            {%if ticket.status == 3 %} {{ 'bg-success' }} {% endif %}
+                            {%if ticket.status == 4 %} {{ 'bg-danger' }} {% endif %}
+                        ">
+                            {% if ticket.status == 4 %}
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="#ffffff" width="9" style="margin-top: -3px; margin-right: 5px" viewBox="0 0 320 512">
+                                <path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"/>
+                            </svg>
+                            {% elif ticket.status == 3 %}
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="#ffffff" width="14" style="margin-top: -3px; margin-right: 5px" viewBox="0 0 512 512">
+                                <path d="M470.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L192 338.7 425.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/>
+                            </svg>
+                            {% else %}
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="#ffffff" width="12" style="margin-top: -3px; margin-right: 5px" viewBox="0 0 512 512">
+                                <path d="M256 512C114.6 512 0 397.4 0 256S114.6 0 256 0S512 114.6 512 256s-114.6 256-256 256zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"/>
+                            </svg>
                             {% endif %}
+                            {{ ticket.get_status_display }}
+                        </span>
+                        {% if user.role != 3 %}
+                            <span class="badge
+                            {%if ticket.urgency == 1 %} {{ 'bg-danger' }} {% endif %}
+                            {%if ticket.urgency == 2 %} {{ 'bg-warning' }} {% endif %}
+                            {%if ticket.urgency == 3 %} {{ 'bg-info' }} {% endif %}
+                            {%if ticket.urgency == 4 %} {{ 'bg-success' }} {% endif %}
+                        ">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="#ffffff" width="12" style="margin-top: -3px; margin-right: 5px" viewBox="0 0 448 512">
+                            <path d="M159.3 5.4c7.8-7.3 19.9-7.2 27.7 .1c27.6 25.9 53.5 53.8 77.7 84c11-14.4 23.5-30.1 37-42.9c7.9-7.4 20.1-7.4 28 .1c34.6 33 63.9 76.6 84.5 118c20.3 40.8 33.8 82.5 33.8 111.9C448 404.2 348.2 512 224 512C98.4 512 0 404.1 0 276.5c0-38.4 17.8-85.3 45.4-131.7C73.3 97.7 112.7 48.6 159.3 5.4zM225.7 416c25.3 0 47.7-7 68.8-21c42.1-29.4 53.4-88.2 28.1-134.4c-2.8-5.6-5.6-11.2-9.8-16.8l-50.6 58.8s-81.4-103.6-87.1-110.6C133.1 243.8 112 273.2 112 306.8C112 375.4 162.6 416 225.7 416z"/>
+                        </svg>
+                            {{ ticket.get_urgency_display }}
+                        </span>
                         {% endif %}
-                    </small>
-                </a>
+                        <br>
+                        <small class="text-muted">
+                            {{ ticket.created_at }} 
+                            {% if user.role != 3 %} • {{ ticket.user }}{% endif %}
+                            {% if user.role == 1 %} 
+                                {% if ticket.agent %} 
+                                    • <span class="text-success">Asignado a {{ ticket.agent }}</span> 
+                                {% else %} 
+                                    • <span class="text-danger">no se ha asignado aún</span>
+                                {% endif %}
+                            {% endif %}
+                        </small>
+                    </div>
+                    <div>
+                        {% if user.role == 1 and ticket.status == 1 %}
+                            <a 
+                                href="{% url 'tickets_app:check' ticket.id %}"
+                                class="btn btn-red me-2"
+                            >Abrir</a>
+                        {% endif %}
+                        <a 
+                            href="{% url 'tickets_app:detail' ticket.id %}"
+                            class="btn btn-primary me-2"
+                            title="Ver detalles"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="#ffffff" width="18" style="margin: -3px -3px 0;" viewBox="0 0 576 512">
+                                <path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/>
+                            </svg>
+                        </a>
+                        {% if user.role != 3 %}
+                            <a 
+                                href="{% url 'tickets_app:edit' ticket.id %}"
+                                class="btn btn-success me-2"
+                                title="Editar ticket"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="#ffffff" width="17" style="margin: -3px -3px 0;" viewBox="0 0 512 512">
+                                    <path d="M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L362.3 51.7l97.9 97.9 30.1-30.1c21.9-21.9 21.9-57.3 0-79.2L471.6 21.7zm-299.2 220c-6.1 6.1-10.8 13.6-13.5 21.9l-29.6 88.8c-2.9 8.6-.6 18.1 5.8 24.6s15.9 8.7 24.6 5.8l88.8-29.6c8.2-2.8 15.7-7.4 21.9-13.5L437.7 172.3 339.7 74.3 172.4 241.7zM96 64C43 64 0 107 0 160V416c0 53 43 96 96 96H352c53 0 96-43 96-96V320c0-17.7-14.3-32-32-32s-32 14.3-32 32v96c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32 32-32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H96z"/>
+                                </svg>
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
             </li>
         {% empty %}
         <li>
