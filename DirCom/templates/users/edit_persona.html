@@ -7,11 +7,15 @@
 
 
 {% block content %}
-    <h1>Editar mis datos</h1>
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Guardar</button>
-        <button><a href="{% url 'users_app:delete_persona' %}">Borrar mi perfil</a></button>
-    </form>
+    {% include 'includes/header.html' %}
+
+    <div class="container mb-5">
+        <h1>Editar mis datos</h1>
+
+        <form class="pt-2 pb-5 mw-600" method="POST" enctype="multipart/form-data">
+            {% csrf_token %} {{ form.as_p }}
+            <button class="btn btn-primary me-3" type="submit">Enviar</button>
+            <a class="btn btn-danger" href="{% url 'users_app:delete_persona' %}">Borrar mi perfil</a>
+        </form>
+    </div>
 {% endblock content %}

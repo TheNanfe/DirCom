@@ -15,6 +15,17 @@ class AddPersonaForm(forms.ModelForm):
             visible.field.widget.attrs['class'] = 'form-control'
 
 
+class UpdatePersonaForm(forms.ModelForm):
+    class Meta:
+        model = Persona
+        fields = ("__all__")
+
+    def __init__(self, *args, **kwargs):
+        super(UpdatePersonaForm, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'
+
+
 class CustomUserCreationForm(UserCreationForm):
     """
     clase para el formulario de creación de usuarios del admin

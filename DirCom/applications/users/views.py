@@ -16,14 +16,16 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 
-from .forms import AddPersonaForm, UserRegisterForm, UserLoginForm, UpdatePasswordForm
+from .forms import AddPersonaForm, UpdatePersonaForm, UserRegisterForm, UserLoginForm, UpdatePasswordForm
 from .models import User, Persona
 
 
-class PersonaRegisterView(CreateView):
+class PersonaRegisterView(LoginRequiredMixin, CreateView):
+    """vista para que el admin pueda crear personas"""
     form_class = AddPersonaForm
     template_name = "users/add_persona.html"
     success_url = reverse_lazy("users_app:register")
+    login_url = reverse_lazy("users_app:login")
 
     def dispatch(self, request, *args, **kwargs):
         if request.user.role != 1:
@@ -33,10 +35,10 @@ class PersonaRegisterView(CreateView):
 
 
 class PersonaUpdateProfileView(LoginRequiredMixin, UpdateView):
-    model = Persona
+    """vista para que los usuarios puedan editar sus datos"""
+    form_class = UpdatePersonaForm
     template_name = "users/edit_persona.html"
-    fields = "__all__"
-    success_url = reverse_lazy("core_app:home")
+    success_url = reverse_lazy("users_app:profile")
     login_url = reverse_lazy("users_app:login")
 
     def get_object(self):
@@ -47,6 +49,7 @@ class PersonaDeleteProfileView(LoginRequiredMixin, View):
     login_url = reverse_lazy("users_app:login")
 
     """ vista para eliminar la cuenta de un usuario """
+
     def get(self, request, *args, **kwargs):
         user = self.request.user
         user.is_active = False
@@ -102,9 +105,9 @@ class UserLoginView(FormView):
 
 
 class UserLogoutView(LoginRequiredMixin, View):
-    login_url = reverse_lazy("users_app:login")
+    """vista para cerrar la sesión de los usuarios"""
 
-    """ vista para cerrar la sesión de los usuarios """
+    login_url = reverse_lazy("users_app:login")
 
     def get(self, request, *args, **kwargs):
         # el método logout hace lo contrario al método login
@@ -115,6 +118,8 @@ class UserLogoutView(LoginRequiredMixin, View):
 
 
 class UpdatePasswordView(LoginRequiredMixin, FormView):
+    """vista para que los usuarios cambien su contraseña"""
+
     template_name = "users/password.html"
     form_class = UpdatePasswordForm
     success_url = reverse_lazy("users_app:login")
@@ -141,11 +146,15 @@ class UpdatePasswordView(LoginRequiredMixin, FormView):
 
 
 class MyProfileView(LoginRequiredMixin, TemplateView):
+    """vista para que los usuarios vean su perfil"""
+
     template_name = "users/profile.html"
     login_url = reverse_lazy("users_app:login")
 
 
 class AllUsersView(LoginRequiredMixin, ListView):
+    """vista para que el admin pueda ver la lista de usuarios del sistema"""
+
     model = User
     template_name = "users/all.html"
     context_object_name = "users"
@@ -159,6 +168,8 @@ class AllUsersView(LoginRequiredMixin, ListView):
 
 
 class UserDetailView(LoginRequiredMixin, DetailView):
+    """vista para que el admin pueda visitar la cuenta de un usuario"""
+
     model = User
     template_name = "users/detail.html"
     context_object_name = "usuario"
@@ -168,9 +179,10 @@ class UserDetailView(LoginRequiredMixin, DetailView):
 
 
 class SwitchStatusUserView(LoginRequiredMixin, View):
+    """vista para que el admin pueda dar de alta o baja la cuenta de un usuario"""
+
     login_url = reverse_lazy("users_app:login")
 
-    """ vista para eliminar la cuenta de un usuario """
     def get(self, request, *args, **kwargs):
         username = kwargs.get("username", "default")
         user = User.objects.get(username=username)
