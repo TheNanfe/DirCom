@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 
-
 {% block title %}
     Bienvenido
 {% endblock title %}
@@ -9,11 +8,16 @@
 {% block content %}
     {% include 'includes/header.html' %}
 
-    <div class="container">
+    <div class="container pb-5">
         <h1>Bienvenido {{ user.persona }} al DirCom</h1>
-        <h2 class="mt-5">Tus últimos tickets</h2>
+        {% if user.role == 3 %}
+            <h2 class="mt-5">Tus últimos tickets</h2>
+        {% else %}
+            <h2 class="mt-5">Últimos tickets recibidos</h2>
+        {% endif %}
+
         <ul>
-            {% for ticket in user.user_tickets.all|slice:':3' %}
+            {% for ticket in tickets %}
             <li class="mb-2">
                 <a 
                     {% if user.role == 3 %} href="{% url 'tickets_app:detail' ticket.id %}"  {% endif %}
@@ -70,15 +74,27 @@
                 </a>
             </li>
             {% empty %}
-            <li class="py-5">
-                <p class="text-center">No tienes tickets aún, <a href="{% url 'tickets_app:create' %}">crea uno aquí</a>.</p>
-            </li>
+                {% if user.role == 3 %}
+                    <li class="py-5">
+                        <p class="text-center">No tienes tickets aún, <a href="{% url 'tickets_app:create' %}">crea uno aquí</a>.</p>
+                    </li>
+                {% else%}
+                    <li class="py-5">
+                        <p class="text-center">No hay tickets recientes...</p>
+                    </li>
+                {% endif %}
             {% endfor %}
         </ul>
-        {% if user.user_tickets.count > 3 %}
-        <div class="d-flex justify-content-center">
-            <a href="{% url 'tickets_app:all' %}" class="btn btn-primary">Ver todos tus tickets</a>
-        </div>
+        {% if tickets.count > 3 %}
+            {% if user.role == 3 %}
+                <div class="d-flex justify-content-center">
+                    <a href="{% url 'tickets_app:all' %}" class="btn btn-primary">Ver todos tus tickets</a>
+                </div>
+            {% else %}
+                <div class="d-flex justify-content-center">
+                    <a href="{% url 'tickets_app:all' %}" class="btn btn-primary">Ver todos los tickets</a>
+                </div>
+            {% endif %}
         {% endif %}
     </div>
 {% endblock content %}

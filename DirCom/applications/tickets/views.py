@@ -3,6 +3,7 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, DetailView, TemplateView, UpdateView
 from django.views.generic.edit import FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
 
 from .models import Comment, Ticket
 from .forms import AddTicketForm, AddCommentForm, AdminEditTicketForm, EditTicketForm
@@ -20,7 +21,9 @@ class AllTicketsView(LoginRequiredMixin, ListView):
             tickets = Ticket.objects.all()
         # solo tickets asignados al analista
         if self.request.user.role == 2:
-            tickets = Ticket.objects.filter(agent=self.request.user)
+            tickets = Ticket.objects.filter(agent=self.request.user).filter(
+                ~Q(status=4)
+            )
         # solo tickets propios para el usuario
         if self.request.user.role == 3:
             tickets = Ticket.objects.filter(user=self.request.user)
@@ -84,7 +87,7 @@ class CreateCommentView(LoginRequiredMixin, FormView):
 
     def get_success_url(self, **kwargs):
         ticket = self.kwargs.get("ticket_id")
-        if(self.request.user.role == 3):
+        if self.request.user.role == 3:
             url = reverse("tickets_app:detail", kwargs={"pk": ticket})
         else:
             url = reverse("tickets_app:edit", kwargs={"pk": ticket})
