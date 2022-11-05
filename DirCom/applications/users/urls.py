@@ -14,4 +14,5 @@ urlpatterns = [
     path("perfil/", views.MyProfileView.as_view(), name="profile"),
     path("usuarios/", views.AllUsersView.as_view(), name="all"),
     path("usuarios/<username>/", views.UserDetailView.as_view(), name="detail"),
+    path("eliminar/<username>/", views.SwitchStatusUserView.as_view(), name="switch"),
 ]

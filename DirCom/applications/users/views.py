@@ -47,7 +47,6 @@ class PersonaDeleteProfileView(LoginRequiredMixin, View):
     login_url = reverse_lazy("users_app:login")
 
     """ vista para eliminar la cuenta de un usuario """
-
     def get(self, request, *args, **kwargs):
         user = self.request.user
         user.is_active = False
@@ -166,3 +165,21 @@ class UserDetailView(LoginRequiredMixin, DetailView):
     slug_url_kwarg = "username"
     slug_field = "username"
     login_url = reverse_lazy("users_app:login")
+
+
+class SwitchStatusUserView(LoginRequiredMixin, View):
+    login_url = reverse_lazy("users_app:login")
+
+    """ vista para eliminar la cuenta de un usuario """
+    def get(self, request, *args, **kwargs):
+        username = kwargs.get("username", "default")
+        user = User.objects.get(username=username)
+        user.is_active = not user.is_active
+        user.save()
+        return HttpResponseRedirect(reverse("users_app:all"))
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.role != 1:
+            return redirect("core_app:home")
+        else:
+            return super(SwitchStatusUserView, self).dispatch(request, *args, **kwargs)
