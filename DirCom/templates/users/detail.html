@@ -18,7 +18,7 @@
             ></div>
             <h2 class="text-center mt-3">{{ usuario.persona.first_name }} {{ usuario.persona.last_name }}</h2>
             <h5 class="text-muted fw-normal text-center">@{{ usuario.username }}</h5>
-            <p class="text-center mb-1"><a href="#">Editar información</a></p>
+            <p class="text-center mb-1"><a href="{% url 'users_app:edit' usuario.persona.id %}">Editar información</a></p>
         </div>
         <div class="w-75 ps-5">
             <h2>Información:</h2>

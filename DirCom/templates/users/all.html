@@ -9,7 +9,12 @@
 {% block content %}
     {% include 'includes/header.html' %}
     <div class="container mb-5">
-        <h1 class="mb-4">Todos los usuarios</h1>
+        <div class="mb-4 d-flex align-items-center justify-content-between">
+            <h1>Todos los usuarios</h1>
+            <a class="btn btn-primary ms-2" href="{% url 'users_app:add_persona' %}" class="nav-link">
+                Agregar persona
+            </a>
+        </div>
 
         <ul>
         {% for user in users %}
@@ -60,7 +65,7 @@
                             </svg>
                         </a>
                         <a 
-                            href="{% url 'users_app:detail' user.username %}"
+                            href="{% url 'users_app:edit' user.persona.id %}"
                             class="btn btn-success me-2"
                             title="Editar usuario"
                         >

@@ -16,12 +16,19 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 
-from .forms import AddPersonaForm, UpdatePersonaForm, UserRegisterForm, UserLoginForm, UpdatePasswordForm
+from .forms import (
+    AddPersonaForm,
+    UpdatePersonaForm,
+    UserRegisterForm,
+    UserLoginForm,
+    UpdatePasswordForm,
+)
 from .models import User, Persona
 
 
 class PersonaRegisterView(LoginRequiredMixin, CreateView):
     """vista para que el admin pueda crear personas"""
+
     form_class = AddPersonaForm
     template_name = "users/add_persona.html"
     success_url = reverse_lazy("users_app:register")
@@ -36,6 +43,7 @@ class PersonaRegisterView(LoginRequiredMixin, CreateView):
 
 class PersonaUpdateProfileView(LoginRequiredMixin, UpdateView):
     """vista para que los usuarios puedan editar sus datos"""
+
     form_class = UpdatePersonaForm
     template_name = "users/edit_persona.html"
     success_url = reverse_lazy("users_app:profile")
@@ -176,6 +184,22 @@ class UserDetailView(LoginRequiredMixin, DetailView):
     slug_url_kwarg = "username"
     slug_field = "username"
     login_url = reverse_lazy("users_app:login")
+
+
+class UserUpdateView(LoginRequiredMixin, UpdateView):
+    """vista para que el admin edite a los usuarios"""
+
+    model = Persona
+    form_class = UpdatePersonaForm
+    template_name = "users/edit.html"
+    success_url = reverse_lazy("users_app:all")
+    login_url = reverse_lazy("users_app:login")
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.role != 1:
+            return redirect("core_app:home")
+        else:
+            return super(UserUpdateView, self).dispatch(request, *args, **kwargs)
 
 
 class SwitchStatusUserView(LoginRequiredMixin, View):
