@@ -24,6 +24,8 @@ class AllTicketsView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         title = self.request.GET.get("title", "")
+        status = self.request.GET.get("status", "")
+        urgency = self.request.GET.get("urgency", "")
         # todos los tickets para el admin
         if self.request.user.role == 1:
             tickets = Ticket.objects.all()
@@ -32,15 +34,22 @@ class AllTicketsView(LoginRequiredMixin, ListView):
             tickets = Ticket.objects.filter(agent=self.request.user).filter(
                 ~Q(status=4)
             )
-        # solo tickets propios para el usuario
+        # solo tickets propios para el cliente
         if self.request.user.role == 3:
             tickets = Ticket.objects.filter(user=self.request.user)
-        filtered = tickets.filter(title__contains=title)
-        return filtered
+        if title:
+            tickets = tickets.filter(title__contains=title)
+        if status:
+            tickets = tickets.filter(status=status)
+        if urgency:
+            tickets = tickets.filter(urgency=urgency)
+        return tickets
 
     def get_context_data(self, **kwargs):
         context = super(AllTicketsView, self).get_context_data(**kwargs)
         context["title"] = self.request.GET.get("title", "")
+        context["select"] = self.request.GET.get("status", "")
+        context["urgency"] = self.request.GET.get("urgency", "")
         return context
 
 

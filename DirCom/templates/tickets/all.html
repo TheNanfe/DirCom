@@ -12,14 +12,39 @@
 
     <div class="container pb-5">
         {% if user.role == 3 %}
-            <h1 class="mt-5">Tu historial de tickets</h1>
+            <h1 class="mt-5 mb-3">Tu historial de tickets</h1>
         {% else %}
-            <h1 class="mt-5">Tickets recibidos</h1>
+            <h1 class="mt-5 mb-3">Tickets recibidos</h1>
         {% endif %}
 
-        <form method="GET" class="d-flex mb-5">
-            <input class="form-control" name="title" id="title" placeholder="Buscar..." />
-            <button class="btn btn-primary ms-2" type="submit">Buscar</button>
+        <form method="GET" class="mb-5">
+            <div class="row">
+                <div class="col-6">
+                    <input class="form-control" name="title" id="title" placeholder="Buscar..." />
+                </div>
+                <div class="col-2">
+                    <select class="form-select" name="status">
+                        <option selected value="">Estado</option>
+                        <option value="1">Pendiente</option>
+                        <option value="2">En curso</option>
+                        <option value="3">Finalizado</option>
+                        <option value="4">Rechazado</option>
+                    </select>
+                </div>
+                <div class="col-2">
+                    <select class="form-select" name="urgency">
+                        <option selected value="">Urgencia</option>
+                        <option value="1">Urgente</option>
+                        <option value="2">Alta</option>
+                        <option value="3">Media</option>
+                        <option value="4">Baja</option>
+                    </select>
+                </div>
+                <div class="col-2">
+                    <button class="btn btn-primary me-2" type="submit">Buscar</button>
+                    <a href="{% url 'tickets_app:all' %}" class="btn btn-secondary">Limpiar</a>
+                </div>
+            </div>
         </form>
 
         <ul>
