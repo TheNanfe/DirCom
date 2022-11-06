@@ -38,7 +38,7 @@ class AllTicketsView(LoginRequiredMixin, ListView):
         if self.request.user.role == 3:
             tickets = Ticket.objects.filter(user=self.request.user)
         if title:
-            tickets = tickets.filter(title__contains=title)
+            tickets = tickets.filter(title__icontains=title)
         if status:
             tickets = tickets.filter(status=status)
         if urgency:
@@ -48,7 +48,7 @@ class AllTicketsView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super(AllTicketsView, self).get_context_data(**kwargs)
         context["title"] = self.request.GET.get("title", "")
-        context["select"] = self.request.GET.get("status", "")
+        context["status"] = self.request.GET.get("status", "")
         context["urgency"] = self.request.GET.get("urgency", "")
         return context
 

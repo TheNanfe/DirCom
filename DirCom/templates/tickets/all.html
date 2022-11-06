@@ -12,9 +12,9 @@
 
     <div class="container pb-5">
         {% if user.role == 3 %}
-            <h1 class="mt-5 mb-3">Tu historial de tickets</h1>
+            <h1 class="my-5">Tu historial de tickets</h1>
         {% else %}
-            <h1 class="mt-5 mb-3">Tickets recibidos</h1>
+            <h1 class="my-5">Tickets recibidos</h1>
         {% endif %}
 
         <form method="GET" class="mb-5">
@@ -135,9 +135,15 @@
                 </div>
             </li>
         {% empty %}
-        <li>
-            <p class="text-center">No tienes tickets aún, <a href="{% url 'tickets_app:create' %}">crea uno aquí</a>.</p>
-        </li>
+            {% if user.role == 3 %}
+            <li>
+                <p class="text-center">No tienes tickets aún, <a href="{% url 'tickets_app:create' %}">crea uno aquí</a>.</p>
+            </li>
+            {% else %}
+            <li>
+                <p class="text-center">No hay resultados.</p>
+            </li>
+            {% endif %}
         {% endfor %}
         </ul>
 

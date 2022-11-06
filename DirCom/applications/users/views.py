@@ -9,6 +9,7 @@ from django.views.generic import (
 )
 from django.views.generic.edit import FormView
 from django.urls import reverse_lazy, reverse
+from django.db.models import Q
 
 # django.contrib.auth es el módulo que nos permite implementar
 # las funcionalidades de manejos de sesión en nuestras vistas
@@ -161,7 +162,7 @@ class MyProfileView(LoginRequiredMixin, TemplateView):
 
 
 class AllUsersView(LoginRequiredMixin, ListView):
-    """vista para que el admin pueda ver la lista de usuarios del sistema"""
+    """vista para que el admmin pueda ver la lista de usuarios del sistema"""
 
     model = User
     template_name = "users/all.html"
@@ -174,6 +175,32 @@ class AllUsersView(LoginRequiredMixin, ListView):
             return redirect("core_app:home")
         else:
             return super(AllUsersView, self).dispatch(request, *args, **kwargs)
+
+    def get_queryset(self):
+        name = self.request.GET.get("name", "")
+        status = self.request.GET.get("status", "")
+        role = self.request.GET.get("role", "")
+        users = User.objects.all()
+        if name:
+            users = users.filter(
+                Q(persona__first_name__icontains=name)
+                | Q(persona__last_name__icontains=name)
+                | Q(username__icontains=name)
+            )
+        if status == "1":
+            users = users.filter(is_active=True)
+        if status == "2":
+            users = users.filter(is_active=False)
+        if role:
+            users = users.filter(role=role)
+        return users
+
+    def get_context_data(self, **kwargs):
+        context = super(AllUsersView, self).get_context_data(**kwargs)
+        context["name"] = self.request.GET.get("name", "")
+        context["status"] = self.request.GET.get("status", "")
+        context["role"] = self.request.GET.get("role", "")
+        return context
 
 
 class UserDetailView(LoginRequiredMixin, DetailView):
