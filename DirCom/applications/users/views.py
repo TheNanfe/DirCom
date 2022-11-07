@@ -21,6 +21,7 @@ from .forms import (
     AddPersonaForm,
     UpdatePersonaForm,
     UserRegisterForm,
+    UserUpdateRoleForm,
     UserLoginForm,
     UpdatePasswordForm,
 )
@@ -66,12 +67,13 @@ class PersonaDeleteProfileView(LoginRequiredMixin, View):
         return HttpResponseRedirect(reverse("users_app:login"))
 
 
-class UserRegisterView(FormView):
+class UserRegisterView(LoginRequiredMixin, FormView):
     """vista para registrar nuevos usuarios"""
 
     template_name = "users/register.html"
     form_class = UserRegisterForm
     success_url = "/"
+    login_url = reverse_lazy("users_app:login")
 
     def dispatch(self, request, *args, **kwargs):
         if request.user.role != 1:
@@ -85,10 +87,29 @@ class UserRegisterView(FormView):
         User.objects.create_user(
             form.cleaned_data["username"],
             form.cleaned_data["persona"],
+            form.cleaned_data["role"],
             form.cleaned_data["custom_password"],
         )
 
         return super(UserRegisterView, self).form_valid(form)
+
+
+class UserUpdateRoleView(LoginRequiredMixin, UpdateView):
+    model = User
+    template_name = "users/role.html"
+    form_class = UserUpdateRoleForm
+    login_url = reverse_lazy("users_app:login")
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.role != 1:
+            return redirect("core_app:home")
+        else:
+            return super(UserUpdateRoleView, self).dispatch(request, *args, **kwargs)
+
+    def get_success_url(self, **kwargs):
+        user = self.kwargs.get("pk")
+        url = reverse("users_app:edit", kwargs={"pk": user})
+        return url
 
 
 class UserLoginView(FormView):

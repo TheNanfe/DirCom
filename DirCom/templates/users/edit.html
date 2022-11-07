@@ -10,9 +10,12 @@
     {% include 'includes/header.html' %}
 
     <div class="container mb-5">
-        <h1>Editar datos de {{ persona }}</h1>
+        <div class="d-flex align-items-center justify-content-between">
+            <h1>Editar datos de {{ persona }}</h1>
+            <a class="btn btn-primary" href="{% url 'users_app:update' persona.id %}">Avanzado</a>
+        </div>
 
-        <form class="pt-2 pb-5 mw-600" method="POST" enctype="multipart/form-data">
+        <form class="pt-5 pb-5 mw-600" method="POST" enctype="multipart/form-data">
             {% csrf_token %} {{ form.as_p }}
             <button class="btn btn-primary me-3" type="submit"> Actualizar</button>
         </form>

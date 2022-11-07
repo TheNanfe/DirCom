@@ -75,6 +75,7 @@ class UserRegisterForm(forms.ModelForm):
         fields = (
             "username",
             "persona",
+            "role"
         )
 
     def __init__(self, *args, **kwargs):
@@ -91,6 +92,23 @@ class UserRegisterForm(forms.ModelForm):
         """ método para validar que el usuario tiene una contraseña mayor a 5 carácteres """
         if len(self.cleaned_data["custom_password"]) <= 5:
             self.add_error("custom_password", "La contraseña es muy corta")
+
+
+class UserUpdateRoleForm(forms.ModelForm):
+    class Meta:
+        model = User  # el modelo sobre el cual trabajamos
+
+        # la lista de campos que necesita nuestro modelo
+        fields = (
+            "username",
+            "persona",
+            "role"
+        )
+
+    def __init__(self, *args, **kwargs):
+        super(UserUpdateRoleForm, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'
 
 
 class UserLoginForm(forms.Form):

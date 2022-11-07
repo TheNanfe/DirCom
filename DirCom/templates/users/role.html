@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    Editar usuario
+{% endblock title %}
+
+
+{% block content %}
+    {% include 'includes/header.html' %}
+
+    <div class="container mb-5">
+        <h1>Editar datos del usuario:</h1>
+
+        <form class="pt-2 pb-5 mw-600" method="POST" enctype="multipart/form-data">
+            {% csrf_token %} {{ form.as_p }}
+            <button class="btn btn-primary me-3" type="submit">Actualizar</button>
+        </form>
+    </div>
+{% endblock content %}
