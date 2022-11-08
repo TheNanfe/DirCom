@@ -42,7 +42,12 @@ Highcharts.chart('container', {
         name: 'Pendientes',
         data: pending_tickets
 
-    }, {
+    },{
+        name: 'En curso',
+        data: on_course_tickets
+
+    },
+    {
         name: 'Resueltos',
         data: done_tickets
 

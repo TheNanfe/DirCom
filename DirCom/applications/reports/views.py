@@ -10,13 +10,18 @@ from .report import TicketReport
 
 
 class ReportsIndex(LoginRequiredMixin, TemplateView):
+    """ El index de reportes, en donde se listan los reportes disponibles """
+
     template_name = "reports/reports_index.html"
     login_url = reverse_lazy("users_app:login")
 
 
 @require_http_methods(["GET"])
 def tickets_reports(request):
+    """ Reporte de tickets por fechas """
+
     if not request.user.is_authenticated:
+        # si el cliente no esta logeado se le lleva a la pantalla de login
         return HttpResponseRedirect(reverse_lazy("users_app:login"))
 
     if request.method == "GET":
@@ -26,8 +31,10 @@ def tickets_reports(request):
         ticket_report = TicketReport()
         try:
             if start_date is not None and end_date is not None:
+                # se obtiene el reporte en base a las fechas filtradas
                 ticket_report.report_by_dates(start_date, end_date)
 
+            # se crea el contexto para pasarlo al template
             context = {
                 "pending": json.dumps(ticket_report.pending_per_date),
                 "on_course": json.dumps(ticket_report.on_course_per_date),
@@ -41,6 +48,8 @@ def tickets_reports(request):
                 "end_date": ticket_report.format_dates(end_date),
                 "total_tickets": ticket_report.total_tickets
             }
+            # TODO: Aun hay datos para el reporte que no se estan utilizando. Crear una tabla para mostrarlos
+            # TODO: Corregir el placeholder de los filtros de fechas del template
             return render(request, "reports/tickets_reports.html", context)
 
         except Exception as e:
