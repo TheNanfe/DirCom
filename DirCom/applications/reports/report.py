@@ -36,32 +36,35 @@ class TicketReport:
             ORDER BY fecha;
         """
 
-        with connection.cursor() as cursor:
-            cursor.execute(dates_between_query, [start_date, end_date])
-            row = cursor.fetchall()
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute(dates_between_query, [start_date, end_date])
+                row = cursor.fetchall()
 
-        for day in row:
-            pending = day[0]
-            on_course = day[1]
-            done = day[2]
-            rejected = day[3]
-            date = str(day[4])
-            date = self.format_dates(date)
+            for day in row:
+                pending = day[0]
+                on_course = day[1]
+                done = day[2]
+                rejected = day[3]
+                date = str(day[4])
+                date = self.format_dates(date)
 
-            self.total_pending += pending
-            self.total_on_course += on_course
-            self.total_done += done
-            self.total_rejected += rejected
+                self.total_pending += pending
+                self.total_on_course += on_course
+                self.total_done += done
+                self.total_rejected += rejected
 
-            self.pending_per_date.append(pending)
-            self.on_course_per_date.append(on_course)
-            self.done_per_date.append(done)
-            self.rejected_per_date.append(rejected)
-            self.dates.append(date)
+                self.pending_per_date.append(pending)
+                self.on_course_per_date.append(on_course)
+                self.done_per_date.append(done)
+                self.rejected_per_date.append(rejected)
+                self.dates.append(date)
 
-            self.total_per_date.append(pending + on_course + done + rejected)
+                self.total_per_date.append(pending + on_course + done + rejected)
 
-        self.has_content = True
-        self.total_tickets = sum(self.total_per_date)
+            self.has_content = True
+            self.total_tickets = sum(self.total_per_date)
+        except Exception as e:
+            raise Exception(e)
 
 
