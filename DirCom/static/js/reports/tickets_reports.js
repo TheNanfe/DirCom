@@ -7,7 +7,7 @@ Highcharts.chart('container', {
         type: 'column'
     },
     title: {
-        text: 'Relacion de Tickets'
+        text: 'Relación de Tickets'
     },
     xAxis: {
         categories: dates_tickets,
