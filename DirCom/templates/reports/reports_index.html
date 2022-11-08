@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} Reportes {% endblock title %}
+
+{% block content %}
+    {% include 'includes/header.html' %}
+    <div class="container">
+        <h1 class="mb-4">Reportes</h1>
+        <div>
+            <ul class="nav nav-pills">
+                <li class="nav-item">
+                    <a class="btn btn-primary" href="{% url 'reports_app:tickets_reports' %}" class="nav-link">
+                        Reporte de Tickets
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+{% endblock content %}

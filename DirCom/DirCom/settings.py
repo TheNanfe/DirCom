@@ -47,6 +47,7 @@ LOCAL_APPS = [
     'applications.users',
     'applications.core',
     'applications.tickets',
+    'applications.reports',
 ]
 
 THIRD_PARTY_APPS = []

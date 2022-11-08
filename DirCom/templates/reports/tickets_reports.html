@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} Reporte de Tickets {% endblock title %}
+
+{% block content %}
+    {% include 'includes/header.html' %}
+    <style>
+        #extra_info_table {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .form_label {
+            text-align: left;
+            width: 110px;
+            display: inline-block;
+            margin-bottom: 5px;
+        }
+
+        .form_input {
+            width: 130px;
+        }
+    </style>
+    <link rel="stylesheet" href="{% static 'css/reports/tickets_reports.css' %}">
+
+    <script type="text/javascript">
+        var pending_tickets = {{ pending }};
+        var on_course_tickets = {{ on_course }};
+        var done_tickets = {{ done }};
+        var rejected_tickets = {{ rejected }};
+        var dates_tickets = {{ dates | safe }};
+        var total_tickets = {{ total_per_date }};
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+    <div class="container">
+        <div style="border:solid 1px;;padding:15px">
+            <h1 class="mb-4">Reporte de Tickets</h1>
+            <form method="get">
+                <div>
+                    <label class="form_label">Fecha de Inicio: </label>
+                    <input class="form_input" type="date" id="start_date_input" name="start_date" required
+                           placeholder="DD/MM/YYYY">
+                </div>
+                <div>
+                    <label class="form_label">Fecha de Fin: </label>
+                    <input class="form_input" type="date" id="end_date_input" name="end_date" required>
+                </div>
+                <input type="submit" value="Filtrar">
+            </form>
+        </div>
+        {% if has_content %}
+            <div>
+                <table class="table" id="extra_info_table">
+                    <tr>
+                        <th>Fecha Inicio</th>
+                        <th>Fecha Fin</th>
+                        <th>Cantidad de Fechas</th>
+                        <th>Total Tickets</th>
+                    </tr>
+                    <tr>
+                        <td>{{ start_date }}</td>
+                        <td>{{ end_date }}</td>
+                        <td>{{ dates_amount }}</td>
+                        <td>{{ total_tickets }}</td>
+                    </tr>
+                </table>
+            </div>
+            <div>
+                <figure class="highcharts-figure">
+                    <div id="container"></div>
+                    <p class="highcharts-description">
+                    </p>
+                </figure>
+                <script src="{% static 'js/reports/tickets_reports.js' %}"></script>
+            </div>
+        {% else %}
+            <h3>Filtre para poder obtener información...</h3>
+        {% endif %}
+    </div>
+{% endblock content %}
