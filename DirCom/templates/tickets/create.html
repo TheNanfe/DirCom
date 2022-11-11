@@ -1,0 +1,17 @@
+{% extends 'base.html' %} 
+
+{% block title %} Nuevo ticket {% endblock title %}
+
+{% block content %} 
+    {% include 'includes/header.html' %}
+
+    <div class="container mb-5">
+        <h1>Crear ticket</h1>
+        <p>Completa el formulario a continuación para crear un ticket.</p>
+
+        <form class="pt-2 pb-5 mw-600" method="POST" enctype="multipart/form-data">
+            {% csrf_token %} {{ form.as_p }}
+            <button class="btn btn-primary" type="submit">Enviar</button>
+        </form>
+    </div>
+{% endblock content %}

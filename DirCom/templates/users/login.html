@@ -7,10 +7,23 @@
 
 
 {% block content %}
-    <h1>Iniciar sesión</h1>
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Iniciar sesión</button>
-    </form>
+    <div class="d-flex flex-column justify-content-center align-items-center min-vh-100">
+        <h1 class="h3 red fw-normal">DirCom<span class="fw-bold text-dark">CRM</span></h1>
+        <div class="mt-5">
+            <h2 class="text-center">Acceda a su cuenta</h2>
+            <p>
+                ¡Bienvenido de nuevo! Por favor, introduzca sus datos.
+            </p>
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="d-flex justify-content-end">
+                    <a href="#">Recuperar contraseña</a>
+                </div>
+                <div class="mt-3">
+                    <button class="btn btn-red btn-block" type="submit">Ingresar</button>
+                </div>
+            </form>
+        </div>
+    </div>
 {% endblock content %}

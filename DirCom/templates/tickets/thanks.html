@@ -1,0 +1,22 @@
+{% extends 'base.html' %} 
+{% load static %}
+
+{% block title %} ¡Gracias! {% endblock title %}
+
+{% block content %} 
+    {% include 'includes/header.html' %}
+
+    <div class="container mb-5 d-flex justify-content-center align-items-center full-screen">
+        <div>
+            <img src="{% static 'img/done.svg' %}" class="d-block w-50 mx-auto" />
+        </div>
+        <div>
+            <h1 class="text-center">¡Hemos recibido tu solicitud!</h1>
+            <p class="text-center my-3">Nos pondremos en contacto contigo en la brevedad posible.</p>
+            <div class="d-flex justify-content-center">
+                <a class="btn btn-primary" href="{% url 'core_app:home' %}">Volver al inicio</a>
+                <a class="btn btn-secondary ms-2" href="{% url 'tickets_app:all' %}">Ver tu historial</a>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

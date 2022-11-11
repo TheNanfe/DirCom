@@ -7,10 +7,20 @@
 
 
 {% block content %}
-    <h1>Registrar usuario</h1>
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Registrar</button>
-    </form>
+{% include 'includes/header.html' %}
+<div class="d-flex flex-column justify-content-center align-items-center">
+    <div class="mb-5">
+        <h1 class="text-center">Registrar nuevo usuario</h1>
+        <p>
+            Selecciona una persona de la lista para asignarle una cuenta.
+        </p>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div class="mt-3">
+                <button class="btn btn-red btn-block" type="submit">Registrar usuario</button>
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock content %}

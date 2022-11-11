@@ -13,7 +13,10 @@ class Persona(models.Model):
 
     VINC_CHOICES = (("1", "Contratado"), ("2", "Permanente"),)
 
-    gov_id = models.CharField("documento de identidad", max_length=50, unique=True) 
+    gov_id = models.CharField("documento de identidad", max_length=50, unique=True)
+    profile_picture = models.ImageField(
+        "foto de perfil", upload_to="profiles", blank=True, null=True
+    ) 
     email = models.EmailField("correo electrónico", max_length=254, unique=True) 
     first_name = models.CharField("nombres", blank=True, null=True, max_length=150)
     last_name = models.CharField("apellidos", blank=True, null=True, max_length=150)
@@ -37,11 +40,18 @@ class User(AbstractBaseUser, PermissionsMixin):
         Los campos que AbstractBaseUser ya trae predefinidos son:
         -id
         -password
-        -is_admin
+        -is_superuser
     """
+    ROLE_CHOICES = (
+        (1, "Director"),
+        (2, "Analista"),
+        (3, "Cliente"),
+        (4, "Técnico"),
+    )
 
     username = models.CharField("nombre de usuario", max_length=50, unique=True)
     persona = models.OneToOneField(Persona, on_delete=models.CASCADE, primary_key=True)
+    role = models.PositiveSmallIntegerField("rol", choices=ROLE_CHOICES, default=ROLE_CHOICES[2][0])
     is_staff = models.BooleanField("staff", default=False)
     is_active = models.BooleanField("activo", default=True)
     date_joined = models.DateTimeField(default=timezone.now)
@@ -56,3 +66,4 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     class Meta:
         verbose_name = "usuario"
+        ordering = ["-date_joined"]

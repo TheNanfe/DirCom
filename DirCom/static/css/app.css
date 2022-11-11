@@ -1,0 +1,96 @@
+ul {
+    padding-left: 0;
+}
+
+li {
+    list-style: none;
+}
+
+/* utilidades personalizadas */
+
+.red {
+    color: #EB5757;
+}
+
+.bg-red {
+    background-color: #EB5757;
+}
+
+.btn-block {
+    width: 100%;
+}
+
+.btn-red {
+    background-color: #EB5757;
+    color: #fff;
+}
+
+.btn-red:hover {
+    background-color: #bc0e0e;
+    color: #fff;
+}
+
+/* personalizar header */
+
+.nav-link {
+    color: #EB5757 !important;
+}
+
+.nav-link:hover {
+    color: #bc0e0e !important;
+}
+
+.nav-link.active {
+    background-color: #EB5757 !important;
+    color: #FFF !important;
+}
+
+.header-icon {
+    width: 20px;
+    color: #EB5757;
+}
+
+.header-icon:hover {
+    color: #bc0e0e;
+}
+
+.mw-600 {
+    max-width: 600px;
+}
+
+.hover-gray:hover {
+    background-color: #f7f7ff;
+}
+
+.preserve-linebreaks {
+    white-space: pre-wrap;
+}
+
+.new-tab-icon {
+    width: 18px;
+    position: absolute;
+    bottom: -100%;
+    right: -13px;
+    color: #EB5757;
+}
+
+.position-relative:hover .new-tab-icon {
+    color: #bc0e0e;
+}
+
+.profile-pic {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto;
+    border-radius: 50%;
+    background-position: center center;
+    background-size: cover;
+}
+
+.full-screen {
+    min-height: calc(100vh - 180px);
+}
+
+.errorlist {
+    color: #EB5757;
+}

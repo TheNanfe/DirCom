@@ -1,0 +1,63 @@
+{% extends 'base.html' %} 
+
+{% block title %} Rechazar ticket {% endblock title %}
+
+{% block content %} 
+    {% include 'includes/header.html' %}
+
+    <div class="container mb-5">
+        <h1 class="me-4">Exportar tickets</h1>
+
+        <form method="GET" action="{% url 'tickets_app:csv' %}" class="my-5 mw-600">
+            <div class="form-group">
+                <label for="status">Estado</label>
+                <select class="form-control" name="status" id="status">
+                    <option value="" selected>Todas</option>
+                    <option value="1">Pendiente</option>
+                    <option value="2">En curso</option>
+                    <option value="3">Finalizado</option>
+                    <option value="4">Rechazado</option>
+                </select>
+            </div>
+            <div class="form-group mt-4">
+                <label for="urgency">Urgencia</label>
+                <select class="form-control" name="urgency" id="urgency">
+                    <option value="" selected>Todas</option>
+                    <option value="1">Urgente</option>
+                    <option value="2">Alta</option>
+                    <option value="3">Media</option>
+                    <option value="4">Baja</option>
+                </select>
+            </div>
+            <div class="form-group mt-4">
+                <label for="agent">Asignado</label>
+                <select class="form-control" name="agent" id="agent">
+                    <option value="" selected>Todos</option>
+                    {% for agent in agents %}
+                    <option value="{{ agent }}">{{ agent.persona  }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group mt-4">
+                <label for="category">Categoría</label>
+                <select class="form-control" name="category" id="category">
+                    <option value="" selected>Todos</option>
+                    {% for category in categories %}
+                    <option value="{{ category.id }}">{{ category.title  }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="row mt-4">
+                <div class="col-6 form-group">
+                    <label for="from">Desde</label>
+                    <input type="date" name="from" id="from" max="{{today}}" class="form-control">
+                </div>
+                <div class="col-6 form-group">
+                    <label for="to">Hasta</label>
+                    <input type="date" name="to" id="to" max="{{today}}" class="form-control">
+                </div>
+            </div>
+            <button class="btn btn-primary mt-4" type="submit">Descargar</button>
+        </form>
+    </div>
+{% endblock content %}
