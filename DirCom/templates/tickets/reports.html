@@ -1,0 +1,119 @@
+{% extends 'base.html' %} 
+{% load static%}
+
+{% block title %} Rechazar ticket {% endblock title %}
+
+{% block content %} 
+    {% include 'includes/header.html' %}
+
+    <div class="container mb-5">
+        <h1 class="me-4 mb-5">Reportes</h1>
+
+        <div class="accordion" id="accordionExample">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingTwo">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    Filtros
+                    </button>
+                </h2>
+                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <form method="GET" action="{% url 'tickets_app:reports' %}">
+                            <div class="row">
+                                <div class="col-2 form-group">
+                                    <label for="status">Estado</label>
+                                    <select class="form-control" name="status" id="status">
+                                        <option value="" selected>Todos</option>
+                                        <option value="1">Pendiente</option>
+                                        <option value="2">En curso</option>
+                                        <option value="3">Finalizado</option>
+                                        <option value="4">Rechazado</option>
+                                    </select>
+                                </div>
+                                <div class="col-2 form-group">
+                                    <label for="urgency">Urgencia</label>
+                                    <select class="form-control" name="urgency" id="urgency">
+                                        <option value="" selected>Todos</option>
+                                        <option value="1">Urgente</option>
+                                        <option value="2">Alta</option>
+                                        <option value="3">Media</option>
+                                        <option value="4">Baja</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-2">
+                                    <label for="agent">Asignado</label>
+                                    <select class="form-control" name="agent" id="agent">
+                                        <option value="" selected>Todos</option>
+                                        {% for agent in agents %}
+                                        <option value="{{ agent }}">{{ agent.persona  }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group col-2">
+                                    <label for="category">Categoría</label>
+                                    <select class="form-control" name="category" id="category">
+                                        <option value="" selected>Todos</option>
+                                        {% for category in categories %}
+                                        <option value="{{ category.id }}">{{ category.title  }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-2 form-group">
+                                    <label for="from">Desde</label>
+                                    <input type="date" name="from" id="from" max="{{today}}" value="{{default_from}}" class="form-control">
+                                </div>
+                                <div class="col-2 form-group">
+                                    <label for="to">Hasta</label>
+                                    <input type="date" name="to" id="to" max="{{today}}" value="{{today}}" class="form-control">
+                                </div>
+                            </div>
+                            <button class="btn btn-primary mt-4" type="submit">Filtrar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-5">
+            <canvas id="myChart" width="400" height="400"></canvas>
+        </div>
+
+        <script src="{% static 'js/chart.min.js' %}"></script>
+        <script>
+            let result = "{{ result }}"
+            result = result.replaceAll("&quot;", "\"")
+            result = JSON.parse(result)
+
+            const randomNum = () => Math.floor(Math.random() * (235 - 52 + 1) + 52);
+            const randomRGB = () => `rgb(${randomNum()}, ${randomNum()}, ${randomNum()})`;
+
+            let dates = Object.keys(result)
+            let tickets = Object.values(result)
+
+            let colors = []
+
+            tickets.forEach(ticket => colors.push(randomRGB()))
+
+            const ctx = document.getElementById('myChart').getContext('2d');
+            const myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: dates,
+                    datasets: [{
+                        label: 'Cantidad de tickets',
+                        data: tickets,
+                        borderWidth: 1,
+                        backgroundColor: colors
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        </script>
+    </div>
+{% endblock content %}

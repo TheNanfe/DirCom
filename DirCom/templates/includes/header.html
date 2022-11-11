@@ -18,7 +18,8 @@
         </li>
         {% if user.role == 1 %} 
             <li class="nav-item"><a href="{% url 'users_app:all' %}" class="nav-link">Usuarios</a></li>
-            <li class="nav-item"><a href="{% url 'tickets_app:export' %}" class="nav-link">Reportes</a></li>
+            <li class="nav-item"><a href="{% url 'tickets_app:export' %}" class="nav-link">Exportar</a></li>
+            <li class="nav-item"><a href="{% url 'tickets_app:reports' %}" class="nav-link">Reportes</a></li>
         {% endif %}
         {% if user.role == 3 %} 
         <li class="nav-item"><a href="{% url 'tickets_app:all' %}" class="nav-link">Historial</a></li>

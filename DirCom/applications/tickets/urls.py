@@ -7,6 +7,7 @@ urlpatterns = [
     path("", views.AllTicketsView.as_view(), name="all"),
     path("csv/", views.export_tickets_csv, name="csv"),
     path("exportar/", views.export_tickets, name="export"),
+    path("reportes/", views.tickets_reports, name="reports"),
     path("nuevo/", views.CreateTicketView.as_view(), name="create"),
     path("thanks/", views.ThanksView.as_view(), name="thanks"),
     path("editar/<pk>/", views.EditTicketView.as_view(), name="edit"),
