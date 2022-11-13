@@ -21,9 +21,8 @@
                     {% csrf_token %} {{ form.as_p }}
                     <p>
                         <label for="id_service_type">Servicio Solicitado:</label>
-                        <input type="text" name="title" value={{ service_type }} readonly="" maxlength="150"
-                               class="form-control"
-                               required="" id="id_service_type">
+                        <textarea cols="40" rows="1" readonly="" class="form-control" required="">{{ service_type }}</textarea>
+                        </textarea>
                     </p>
                     {% for extra_info in service_extra_info %}
                         <p>

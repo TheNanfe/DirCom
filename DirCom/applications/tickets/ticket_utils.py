@@ -55,6 +55,6 @@ def get_service_name(service_key):
         return "Redacción y publicación de noticia en sitio web"
 
     if service_key == "EVENTO":
-        "Publicación de eventos, vinculados a la UNA, de otras instituciones"
+        return "Publicación de eventos, vinculados a la UNA, de otras instituciones"
 
-    return "---"
+    return "---------"

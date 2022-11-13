@@ -5,7 +5,7 @@ $("#id_category").change(function () {
         let html = (
             '<label for="id_service">Servicio a Solicitar:</label>\
             <select id="type-service" class="form-control" name="press-redaction" style="margin-bottom:5px;">\
-                <option selected value="0">---</option>\
+                <option selected value="0">---------</option>\
                 <option value="DISCURSO">Discurso(Rectora/Vicerrector)</option>\
                 <option value="GACETILLA">Gacetilla de Prensa</option>\
                 <option value="REDES">Redacción y publicación de noticia en redes sociales</option>\
