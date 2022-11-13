@@ -62,6 +62,24 @@ class DetailTicketView(LoginRequiredMixin, DetailView):
     context_object_name = "ticket"
     login_url = reverse_lazy("users_app:login")
 
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        sub_category = Ticket.objects.filter(pk=self.kwargs['pk']).values("sub_category")
+        try:
+            sub_category_dict = sub_category[0]
+            sub_category_dict = parse_json_data(sub_category_dict["sub_category"])
+            service_key = None
+            for key in sub_category_dict:
+                service_key = key
+
+            service_extra_info = sub_category_dict[service_key]
+            context["service_type"] = get_service_name(service_key)
+            context["service_extra_info"] = service_extra_info
+        except Exception as e:
+            print("Exception has occured --> ", e)
+            context["service_type"] = "---"
+        return context
+
 
 class CreateTicketView(LoginRequiredMixin, FormView):
     form_class = AddTicketForm
