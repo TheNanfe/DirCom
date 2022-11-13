@@ -59,6 +59,7 @@ class Ticket(models.Model):
     rejection_message = models.TextField("motivo del rechazo", blank=True, null=True)
     created_at = models.DateTimeField("creado", auto_now_add=True)
     updated_at = models.DateTimeField("último cambio", auto_now=True)
+    sub_category = models.CharField("subcategoria", null=True, max_length=5000)
 
     class Meta:
         verbose_name = "ticket"

@@ -1,17 +1,17 @@
-{% extends 'base.html' %} 
+{% extends 'base.html' %}
 
 {% block title %} Nuevo ticket {% endblock title %}
 
-{% block content %} 
+{% block content %}
     {% include 'includes/header.html' %}
 
     <div class="container mb-5">
         <p class="mb-3"><a class="text-decoration-none" href="{% url 'tickets_app:all' %}">< Volver</a></p>
         <div class="d-block d-md-flex align-items-center">
             <h1 class="me-4">Editar ticket</h1>
-            <a 
-                href="{% url 'tickets_app:detail' ticket.id %}"
-                class="btn btn-primary"
+            <a
+                    href="{% url 'tickets_app:detail' ticket.id %}"
+                    class="btn btn-primary"
             >Ver ticket</a>
         </div>
 
@@ -19,23 +19,36 @@
             <div class="col-7">
                 <form class="pt-2 pb-5 mw-600" method="POST" enctype="multipart/form-data">
                     {% csrf_token %} {{ form.as_p }}
+                    <p>
+                        <label for="id_service_type">Servicio Solicitado:</label>
+                        <input type="text" name="title" value={{ service_type }} readonly="" maxlength="150"
+                               class="form-control"
+                               required="" id="id_service_type">
+                    </p>
+                    {% for extra_info in service_extra_info %}
+                        <p>
+                            <label>{{ extra_info.description }}:</label>
+                            <textarea cols="40" rows="3" readonly="" class="form-control" required="">{{ extra_info.content }}</textarea>
+                        </p>
+                    {% endfor %}
                     <button class="btn btn-primary" type="submit">Actualizar</button>
                 </form>
             </div>
             <div class="col-5">
                 <div class="d-block d-md-flex justify-content-between">
                     <h3 class="text-center text-md-left mb-4">Comentarios</h3>
-                    <a href="{% url 'tickets_app:comment' ticket.id %}" class="d-block d-md-inline btn btn-primary mb-4">+ Agregar nuevo comentario</a>
+                    <a href="{% url 'tickets_app:comment' ticket.id %}"
+                       class="d-block d-md-inline btn btn-primary mb-4">+ Agregar nuevo comentario</a>
                 </div>
                 {% for comment in object.ticket_comments.all %}
                     <li class="bg-light rounded px-4 py-2 mb-4 mw-600">
                         <p class="preserve-linebreaks">{{ comment.content }}</p>
                         {% if comment.file.url is not null %}
-                        <img class="d-block" src="{{comment.file.url}}" width="300" />
+                            <img class="d-block" src="{{ comment.file.url }}" width="300"/>
                         {% endif %}
                         <small class="text-muted">{{ comment.created_at }} • {{ comment.user }}</small>
                     </li>
-                {% empty %}
+                    {% empty %}
                     <li>Este ticket aún no tiene comentarios.</li>
                 {% endfor %}
             </div>
@@ -44,12 +57,12 @@
 
     {% if user.role != 1 %}
         <script>
-            document.addEventListener("DOMContentLoaded", function(event) {
+            document.addEventListener("DOMContentLoaded", function (event) {
                 const choices = document.querySelectorAll("#id_status option")
                 const arr = Array.from(choices)
                 console.log(arr)
                 arr.forEach(choice => {
-                    if(choice.value === "1" || choice.value === "4") choice.remove()
+                    if (choice.value === "1" || choice.value === "4") choice.remove()
                 })
             });
         </script>

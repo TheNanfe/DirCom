@@ -1,9 +1,12 @@
-{% extends 'base.html' %} 
+{% extends 'base.html' %}
+{% load static %}
 
 {% block title %} Nuevo ticket {% endblock title %}
 
-{% block content %} 
+{% block content %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     {% include 'includes/header.html' %}
+
 
     <div class="container mb-5">
         <h1>Crear ticket</h1>
@@ -11,7 +14,9 @@
 
         <form class="pt-2 pb-5 mw-600" method="POST" enctype="multipart/form-data">
             {% csrf_token %} {{ form.as_p }}
+            <div id="dynamic-select"></div>
             <button class="btn btn-primary" type="submit">Enviar</button>
         </form>
     </div>
+    <script src="{% static 'js/tickets/dynamicForms.js' %}"></script>
 {% endblock content %}

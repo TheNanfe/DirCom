@@ -1,3 +1,5 @@
+import json
+
 from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, DetailView, TemplateView, UpdateView, View
@@ -6,6 +8,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.http import HttpResponseRedirect
 
+from ..ticket_utils import *
 from applications.tickets.models import Comment, Ticket, Category
 from applications.tickets.forms import (
     AddTicketForm,
@@ -73,14 +76,17 @@ class CreateTicketView(LoginRequiredMixin, FormView):
             return super(CreateTicketView, self).dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
-        Ticket.objects.create(
+        service_info = get_json_data(form)
+        ticket = Ticket.objects.create(
             user=self.request.user,
             email=form.cleaned_data["email"],
             title=form.cleaned_data["title"],
             content=form.cleaned_data["content"],
             file=form.cleaned_data["file"],
             category=form.cleaned_data["category"],
+            sub_category=json.dumps(service_info),
         )
+
         return super().form_valid(form)
 
 
@@ -119,6 +125,7 @@ class AproveTicketView(LoginRequiredMixin, View):
                 request, *args, **kwargs
             )
 
+
 class RejectTicketView(LoginRequiredMixin, View):
     """vista para que el admin rechace los tickets"""
 
@@ -138,6 +145,7 @@ class RejectTicketView(LoginRequiredMixin, View):
             return super(RejectTicketView, self).dispatch(
                 request, *args, **kwargs
             )
+
 
 class RejectMessageTicketView(LoginRequiredMixin, UpdateView):
     """vista para que el admin escriba el mensaje de motivo del rechazo"""
@@ -160,6 +168,7 @@ class RejectMessageTicketView(LoginRequiredMixin, UpdateView):
                 request, *args, **kwargs
             )
 
+
 class EditTicketView(LoginRequiredMixin, UpdateView):
     model = Ticket
     template_name = "tickets/edit.html"
@@ -171,6 +180,24 @@ class EditTicketView(LoginRequiredMixin, UpdateView):
             return AdminEditTicketForm
         if self.request.user.role == 2:
             return EditTicketForm
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        sub_category = Ticket.objects.filter(pk=self.kwargs['pk']).values("sub_category")
+        try:
+            sub_category_dict = sub_category[0]
+            sub_category_dict = parse_json_data(sub_category_dict["sub_category"])
+            service_key = None
+            for key in sub_category_dict:
+                service_key = key
+
+            service_extra_info = sub_category_dict[service_key]
+            context["service_type"] = get_service_name(service_key)
+            context["service_extra_info"] = service_extra_info
+        except Exception as e:
+            print("Exception has occured --> ", e)
+            context["service_type"] = "---"
+        return context
 
 
 class CreateCommentView(LoginRequiredMixin, FormView):
