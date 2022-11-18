@@ -1,0 +1,85 @@
+<style>
+    .list_element {
+        background: white;
+        cursor: pointer;
+    }
+
+    .list-popup {
+        position: absolute;
+        background: ghostwhite;
+        border: groove;
+        top: 65px;
+        max-width: 300px;
+        overflow-wrap: break-word;
+        font-size-adjust: inherit;
+        z-index: 9999;
+    }
+
+    .popup-paragraph {
+        margin-bottom: 0px;
+        padding-left: 20px !important;
+        font-size: x-small;
+        text-align: left;
+    }
+
+</style>
+<script type="text/javascript">
+    function update_read_status(not_id) {
+        $.ajax(
+            '{% url 'notifications_app:update_read_status' %}',
+            {
+                type: 'POST',  // http method},
+                data: {
+                    notification_id: not_id,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },  // data to submit
+                success: function (message, status, xhr) {
+                    let url_id = "#" + not_id
+                    let url = $(url_id).attr("data-url");
+                    window.location = url
+
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    console.log("Unsuccessful Update...");
+                }
+            });
+    }
+
+</script>
+<div>
+    <ul class="rounded list-popup">
+        {% if notifications %}
+            {% for notification in notifications %}
+                {% if notification.notification_type == "ticket_assignment" or notification.notification_type == "comment_creation" or notification.notification_type == "reject_ticket" or notification.notification_type == "approve_ticket" %}
+                    {% if notification.status_read == "READ" %}
+                        <li class="mb-2 list_element">
+                            <input type="hidden" id="{{ notification.id }}"
+                                   data-url="{% url 'tickets_app:detail' notification.url_args %}"/>
+                            <p class=" popup-paragraph text-decoration-none text-dark d-block px-5 py-2 border border-light rounded hover-gray"
+                               onclick="update_read_status({{ notification.id }})">{{ notification.message }}</p>
+                        </li>
+                    {% else %}
+                        <li class="mb-2 list_element">
+                            <input type="hidden" id="{{ notification.id }}"
+                                   data-url="{% url 'tickets_app:detail' notification.url_args %}"/>
+                            <p style="font-weight: bold;font-style: italic"
+                               class=" popup-paragraph text-decoration-none text-dark d-block px-5 py-2 border border-light rounded hover-gray"
+                               onclick="update_read_status({{ notification.id }})">{{ notification.message }}</p>
+                        </li>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <li class="mb-2 list_element">
+                <p style="font-weight: bold;font-style: italic"
+                   class=" popup-paragraph text-decoration-none text-dark d-block px-5 py-2 border border-light rounded hover-gray">No hay notificaciones...</p>
+            </li>
+        {% endif %}
+    </ul>
+    <script type="text/javascript">
+        document.addEventListener('click', function handleClickOutsideBox(event) {
+            const box = $(".list-popup");
+            box.hide()
+        });
+    </script>
+</div>
