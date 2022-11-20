@@ -18,7 +18,7 @@
     .popup-paragraph {
         margin-bottom: 0px;
         padding-left: 20px !important;
-        font-size: x-small;
+        font-size: small;
         text-align: left;
     }
 
@@ -47,32 +47,40 @@
 
 </script>
 <div>
-    <ul class="rounded list-popup">
+    <ul class="rounded border list-popup">
         {% if notifications %}
             {% for notification in notifications %}
                 {% if notification.notification_type == "ticket_assignment" or notification.notification_type == "comment_creation" or notification.notification_type == "reject_ticket" or notification.notification_type == "approve_ticket" %}
                     {% if notification.status_read == "READ" %}
-                        <li class="mb-2 list_element">
+                        <li class="mb-1  list_element">
                             <input type="hidden" id="{{ notification.id }}"
                                    data-url="{% url 'tickets_app:detail' notification.url_args %}"/>
-                            <p class=" popup-paragraph text-decoration-none text-dark d-block px-5 py-2 border border-light rounded hover-gray"
-                               onclick="update_read_status({{ notification.id }})">{{ notification.message }}</p>
+                            <p class=" popup-paragraph text-decoration-none text-dark d-block px-5 py-2 border border-secondary rounded hover-gray"
+                               onclick="update_read_status({{ notification.id }})">
+                                <b>{{ notification.message }}</b><br>{{ notification.title }}</p>
                         </li>
                     {% else %}
-                        <li class="mb-2 list_element">
+                        <li class="mb-1 list_element" style="background:#EFF9F7">
                             <input type="hidden" id="{{ notification.id }}"
                                    data-url="{% url 'tickets_app:detail' notification.url_args %}"/>
-                            <p style="font-weight: bold;font-style: italic"
-                               class=" popup-paragraph text-decoration-none text-dark d-block px-5 py-2 border border-light rounded hover-gray"
-                               onclick="update_read_status({{ notification.id }})">{{ notification.message }}</p>
+                            <p
+                                    class=" popup-paragraph text-decoration-none text-dark d-block px-5 py-2 border border-secondary rounded hover-gray"
+                                    onclick="update_read_status({{ notification.id }})">
+                                <b>{{ notification.message }}</b><br>{{ notification.title }}</p>
                         </li>
                     {% endif %}
                 {% endif %}
             {% endfor %}
+            <li class="mb-1 list_element">
+                <p style="text-align: center"
+                        class=" popup-paragraph text-decoration-none text-dark d-block px-5 py-2 border border-primary rounded hover-gray">
+                    <b><a href="{% url 'notifications_app:show_all_notifications' request.user.pk %}" >Ver todas las notificaciones</a></b></p>
+            </li>
         {% else %}
-            <li class="mb-2 list_element">
+            <li class="mb-1 list_element">
                 <p style="font-weight: bold;font-style: italic"
-                   class=" popup-paragraph text-decoration-none text-dark d-block px-5 py-2 border border-light rounded hover-gray">No hay notificaciones...</p>
+                   class=" popup-paragraph text-decoration-none text-dark d-block px-5 py-2 border border-light rounded hover-gray">
+                    No hay notificaciones...</p>
             </li>
         {% endif %}
     </ul>

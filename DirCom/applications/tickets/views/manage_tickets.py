@@ -114,8 +114,9 @@ class AproveTicketView(LoginRequiredMixin, View):
         ticket = Ticket.objects.get(pk=pk)
         ticket.status = 2
         ticket.save()
-
-        create_notification("approve_ticket", ticket_id=ticket.id, ticket_title=ticket.title, user_id=ticket.user_id)
+        current_admin = self.request.user.pk
+        create_notification("approve_ticket", ticket_id=ticket.id, ticket_title=ticket.title, user_id=ticket.user_id,
+                            current_admin=current_admin)
         return HttpResponseRedirect(reverse("tickets_app:edit", kwargs={"pk": pk}))
 
     def dispatch(self, request, *args, **kwargs):
@@ -137,8 +138,9 @@ class RejectTicketView(LoginRequiredMixin, View):
         ticket = Ticket.objects.get(pk=pk)
         ticket.status = 4
         ticket.save()
-
-        create_notification("reject_ticket", ticket_id=ticket.id, ticket_title=ticket.title, user_id=ticket.user_id)
+        current_admin = self.request.user.pk
+        create_notification("reject_ticket", ticket_id=ticket.id, ticket_title=ticket.title, user_id=ticket.user_id,
+                            current_admin=current_admin)
         return HttpResponseRedirect(reverse("tickets_app:reject_message", kwargs={"pk": pk}))
 
     def dispatch(self, request, *args, **kwargs):

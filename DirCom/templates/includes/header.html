@@ -43,7 +43,6 @@
         display: inline-block;
         border-radius: 2px;
         top: -6px;
-        cursor: pointer;
     }
 
     .notification .badge {
@@ -54,6 +53,10 @@
         background: red;
         color: white;
         font-size: xx-small;
+        cursor: pointer;
+    }
+
+    #id_bell_notification{
         cursor: pointer;
     }
 </style>
@@ -90,9 +93,9 @@
                 </svg>
             </a></li>
             <li class="nav-item">
-                <a class="nav-link notification" onclick="onclickBell()">
+                <a class="nav-link notification">
                     {% if  request.user.pk|notifications_number != 0  %}
-                        <span id="id_notification_balloon" style="background:#0d6efd" class="badge btn">{{ request.user.pk|notifications_number }}</span>
+                        <span id="id_notification_balloon" onclick="onclickBell()" style="background:#0d6efd" class="badge btn">{{ request.user.pk|notifications_number }}</span>
                     {% endif %}
                     <svg onclick="onclickBell()" id="id_bell_notification" class="header-icon" xmlns="http://www.w3.org/2000/svg"
                          viewBox="0 0 448 512">

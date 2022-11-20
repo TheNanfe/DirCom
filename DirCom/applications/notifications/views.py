@@ -8,6 +8,8 @@ from django.views.decorators.http import require_http_methods
 from .models import Notification
 from django.http.response import JsonResponse, HttpResponse
 
+from .notifications_utils import get_notifications_for_user
+
 
 # Create your views here.
 @require_http_methods(["POST", "GET"])
@@ -19,19 +21,8 @@ def get_notifications(request):
         user_id = int(request.user.pk)
         user_notifications = Notification.objects.filter(user_id=user_id).order_by("-id")
         user_notifications.update(status="VIEWED")
-        notifications = {}
         user_notifications = user_notifications[:10]
-        notification_array = []
-        for notification in user_notifications:
-            notification_array.append({
-                "id": notification.id,
-                "message": notification.message,
-                "url_args": notification.url_args,
-                "notification_type": notification.notification_type,
-                "status_read": notification.status_read
-            })
-        notifications["notifications"] = notification_array
-
+        notifications = get_notifications_for_user(user_notifications)
         return HttpResponse(render(request, "notifications/notification_popup.html", notifications))
 
 
@@ -54,15 +45,5 @@ def show_all_notifications(request, pk):
 
     if request.method == 'GET':
         user_notifications = Notification.objects.filter(user_id=pk).order_by("-id")
-        notifications = {}
-        notification_array = []
-        for notification in user_notifications:
-            notification_array.append({
-                "id": notification.id,
-                "message": notification.message,
-                "url_args": notification.url_args,
-                "notification_type": notification.notification_type,
-                "status_read": notification.status_read
-            })
-        notifications["notifications"] = notification_array
-        return HttpResponse(render(request, "notifications/notification_popup.html", notifications))
+        notifications = get_notifications_for_user(user_notifications)
+        return HttpResponse(render(request, "notifications/list_all_notifications.html", notifications))

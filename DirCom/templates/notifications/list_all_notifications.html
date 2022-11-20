@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    Notificaciones
+{% endblock title %}
+
+
+{% block content %}
+    {% include 'includes/header.html' %}
+    </style>
+    <script type="text/javascript">
+        function update_read_status(not_id) {
+            $.ajax(
+                '{% url 'notifications_app:update_read_status' %}',
+                {
+                    type: 'POST',  // http method},
+                    data: {
+                        notification_id: not_id,
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                    },  // data to submit
+                    success: function (message, status, xhr) {
+                        let url_id = "#" + not_id
+                        let url = $(url_id).attr("data-url");
+                        window.location = url
+
+                    },
+                    error: function (jqXhr, textStatus, errorMessage) {
+                        console.log("Unsuccessful Update...");
+                    }
+                });
+        }
+
+    </script>
+    <div class="container pb-5">
+         <h1 class="my-5">Tu historial de Notificaciones</h1>
+        <ul class="rounded border">
+            {% if notifications %}
+                {% for notification in notifications %}
+                    {% if notification.notification_type == "ticket_assignment" or notification.notification_type == "comment_creation" or notification.notification_type == "reject_ticket" or notification.notification_type == "approve_ticket" %}
+                        {% if notification.status_read == "READ" %}
+                            <li class="mb-2">
+                                <input type="hidden" id="{{ notification.id }}"
+                                       data-url="{% url 'tickets_app:detail' notification.url_args %}"/>
+                                <p class="text-decoration-none text-dark d-block px-5 py-2 border border-light rounded hover-gray"
+                                   onclick="update_read_status({{ notification.id }})">
+                                    <b>{{ notification.message }}</b><br>{{ notification.title }}</p>
+                            </li>
+                        {% else %}
+                            <li class="mb-2" style="background:#EFF9F7">
+                                <input type="hidden" id="{{ notification.id }}"
+                                       data-url="{% url 'tickets_app:detail' notification.url_args %}"/>
+                                <p class="text-decoration-none text-dark d-block px-5 py-2 border border-light rounded hover-gray"
+                                        onclick="update_read_status({{ notification.id }})">
+                                    <b>{{ notification.message }}</b><br>{{ notification.title }}</p>
+                            </li>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <li class="mb-2">
+                    <p style="font-weight: bold;font-style: italic"
+                       class="text-decoration-none text-dark d-block px-5 py-2 border-light rounded hover-gray">
+                        No hay notificaciones que mostrar...</p>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+{% endblock %}

@@ -10,3 +10,4 @@ class Notification(models.Model):
     status = models.CharField(max_length=50, default="PENDING")
     notification_type = models.CharField(max_length=100)
     status_read = models.CharField(max_length=50, default="UNREAD")
+    title = models.CharField(max_length=500, default="")
