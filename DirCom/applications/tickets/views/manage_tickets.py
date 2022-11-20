@@ -222,7 +222,8 @@ class CreateCommentView(LoginRequiredMixin, FormView):
                                 ticket_id=ticket.id,
                                 user_id=ticket.user_id,
                                 agent_id=ticket.agent_id,
-                                current_user=self.request.user.pk)
+                                current_user=self.request.user.pk,
+                                ticket_title=ticket.title)
         except Exception as e:
             print("Error al crear la notificacion -->", e)
 

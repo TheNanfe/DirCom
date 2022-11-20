@@ -7,6 +7,11 @@
 
 
 {% block content %}
+    <style>
+        .not_all{
+            cursor: pointer;
+        }
+    </style>
     {% include 'includes/header.html' %}
     </style>
     <script type="text/javascript">
@@ -39,7 +44,7 @@
                 {% for notification in notifications %}
                     {% if notification.notification_type == "ticket_assignment" or notification.notification_type == "comment_creation" or notification.notification_type == "reject_ticket" or notification.notification_type == "approve_ticket" %}
                         {% if notification.status_read == "READ" %}
-                            <li class="mb-2">
+                            <li class="mb-2 not_all">
                                 <input type="hidden" id="{{ notification.id }}"
                                        data-url="{% url 'tickets_app:detail' notification.url_args %}"/>
                                 <p class="text-decoration-none text-dark d-block px-5 py-2 border border-light rounded hover-gray"
@@ -47,7 +52,7 @@
                                     <b>{{ notification.message }}</b><br>{{ notification.title }}</p>
                             </li>
                         {% else %}
-                            <li class="mb-2" style="background:#EFF9F7">
+                            <li class="mb-2 not_all" style="background:#EFF9F7">
                                 <input type="hidden" id="{{ notification.id }}"
                                        data-url="{% url 'tickets_app:detail' notification.url_args %}"/>
                                 <p class="text-decoration-none text-dark d-block px-5 py-2 border border-light rounded hover-gray"
