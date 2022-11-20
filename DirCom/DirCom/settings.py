@@ -50,6 +50,7 @@ LOCAL_APPS = [
     "applications.users",
     "applications.core",
     "applications.tickets",
+    "applications.notifications",
 ]
 
 THIRD_PARTY_APPS = []
@@ -80,6 +81,9 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
             ],
+            "libraries":{
+                "notifications_filters": "applications.notifications.notifications_filters",
+            },
         },
     },
 ]
