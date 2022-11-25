@@ -153,3 +153,10 @@ AUTH_USER_MODEL = "users.User"
 # Manejo de imágenes
 MEDIA_URL = "uploads/"  # link visible en el browser
 MEDIA_ROOT = str(BASE_DIR / "static/uploads")  # carpeta donde se guardan las subidas
+
+EMAIL_HOST = env("EMAIL_HOST")
+EMAIL_HOST_USER = env("EMAIL_HOST_USER")
+EMAIL_FROM = env("EMAIL_FROM")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
+EMAIL_PORT = "465"
+EMAIL_USE_SSL = True
