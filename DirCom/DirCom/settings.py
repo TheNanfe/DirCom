@@ -160,3 +160,7 @@ EMAIL_FROM = env("EMAIL_FROM")
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
 EMAIL_PORT = "465"
 EMAIL_USE_SSL = True
+
+# este es el dominio donde alojamos nuestra app
+# en local usualmente es localhost:8000
+APP_DOMAIN = env("APP_DOMAIN")

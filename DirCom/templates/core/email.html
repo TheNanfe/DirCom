@@ -29,6 +29,9 @@
             .t_cht {
                 color: #000 !important;
             }
+            h2 {
+                line-height: 1.4em;
+            }
             .ExternalClass p,
             .ExternalClass span,
             .ExternalClass font,
@@ -56,10 +59,10 @@
                             <tr>
                                 <td
                                     align="center"
-                                    bgcolor="#AE9068"
+                                    bgcolor="#EB5757"
                                     style="padding: 2rem 0 2rem 0"
                                 >
-                                    DirComCRM
+                                    <span style="font-size: 40px; color: #FFFFFF; font-weight: 700;">DirComCRM</span>
                                 </td>
                             </tr>
                             <tr>
@@ -68,19 +71,17 @@
                                     style="
                                         padding: 3rem 0 3rem 0;
                                         font-family: Verdana;
+                                        font-size: 16px;
                                     "
                                 >
                                     <h2>{{ title }}</h2>
-                                    <!--<p>
-                                        Sumaste {{currentPoints}} nuevos
-                                        cupones, y en lo que va de la promo
-                                        llevas acumulados {{totalPoints}}
-                                        cupones.
-                                    </p>-->
                                     <p>
                                         {{content}}
                                     </p>
                                     <a href="{{ url }}">{{ action_text }}</a>
+                                    <p style="font-size: 12px">
+                                        Si el botón no te funciona, prueba copiar y pegar este enlace en tu navegador: {{ url }}
+                                    </p>
                                 </td>
                             </tr>
                             <tr>
@@ -96,7 +97,7 @@
                                         "
                                         href="#"
                                         target="_blank"
-                                        >Bases y condiciones</a
+                                        >DirComCRM fpuna 2022</a
                                     >
                                 </td>
                             </tr>

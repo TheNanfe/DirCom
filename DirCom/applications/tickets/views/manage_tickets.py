@@ -84,8 +84,8 @@ class CreateTicketView(LoginRequiredMixin, FormView):
             category=form.cleaned_data["category"],
         )
         # codigo comentado por si se utilice alguna vez
-        '''create_notification("created_ticket", ticket_id=created_ticket.id, ticket_title=created_ticket.title,
-                            user_id=self.request.user.pk)'''
+        """create_notification("created_ticket", ticket_id=created_ticket.id, ticket_title=created_ticket.title,
+                            user_id=self.request.user.pk)"""
         return super().form_valid(form)
 
 
@@ -115,17 +115,20 @@ class AproveTicketView(LoginRequiredMixin, View):
         ticket.status = 2
         ticket.save()
         current_admin = self.request.user.pk
-        create_notification("approve_ticket", ticket_id=ticket.id, ticket_title=ticket.title, user_id=ticket.user_id,
-                            current_admin=current_admin)
+        create_notification(
+            "approve_ticket",
+            ticket_id=ticket.id,
+            ticket_title=ticket.title,
+            user_id=ticket.user_id,
+            current_admin=current_admin,
+        )
         return HttpResponseRedirect(reverse("tickets_app:edit", kwargs={"pk": pk}))
 
     def dispatch(self, request, *args, **kwargs):
         if request.user.role != 1:
             return redirect("core_app:home")
         else:
-            return super(AproveTicketView, self).dispatch(
-                request, *args, **kwargs
-            )
+            return super(AproveTicketView, self).dispatch(request, *args, **kwargs)
 
 
 class RejectTicketView(LoginRequiredMixin, View):
@@ -139,17 +142,22 @@ class RejectTicketView(LoginRequiredMixin, View):
         ticket.status = 4
         ticket.save()
         current_admin = self.request.user.pk
-        create_notification("reject_ticket", ticket_id=ticket.id, ticket_title=ticket.title, user_id=ticket.user_id,
-                            current_admin=current_admin)
-        return HttpResponseRedirect(reverse("tickets_app:reject_message", kwargs={"pk": pk}))
+        create_notification(
+            "reject_ticket",
+            ticket_id=ticket.id,
+            ticket_title=ticket.title,
+            user_id=ticket.user_id,
+            current_admin=current_admin,
+        )
+        return HttpResponseRedirect(
+            reverse("tickets_app:reject_message", kwargs={"pk": pk})
+        )
 
     def dispatch(self, request, *args, **kwargs):
         if request.user.role != 1:
             return redirect("core_app:home")
         else:
-            return super(RejectTicketView, self).dispatch(
-                request, *args, **kwargs
-            )
+            return super(RejectTicketView, self).dispatch(request, *args, **kwargs)
 
 
 class RejectMessageTicketView(LoginRequiredMixin, UpdateView):
@@ -185,8 +193,13 @@ class EditTicketView(LoginRequiredMixin, UpdateView):
         if self.request.method == "POST":
             try:
                 data = self.request.POST
-                create_notification("ticket_assignment", ticket_id=self.kwargs["pk"], agent_id=data["agent"],
-                                    current_agent=str(self.object.agent_id), ticket_title=data["title"])
+                create_notification(
+                    "ticket_assignment",
+                    ticket_id=self.kwargs["pk"],
+                    agent_id=data["agent"],
+                    current_agent=str(self.object.agent_id),
+                    ticket_title=data["title"],
+                )
             except Exception as e:
                 print("Error al crear la notificacion -->", e)
 
@@ -218,12 +231,14 @@ class CreateCommentView(LoginRequiredMixin, FormView):
             file=form.cleaned_data["file"],
         )
         try:
-            create_notification("comment_creation",
-                                ticket_id=ticket.id,
-                                user_id=ticket.user_id,
-                                agent_id=ticket.agent_id,
-                                current_user=self.request.user.pk,
-                                ticket_title=ticket.title)
+            create_notification(
+                "comment_creation",
+                ticket_id=ticket.id,
+                user_id=ticket.user_id,
+                agent_id=ticket.agent_id,
+                current_user=self.request.user.pk,
+                ticket_title=ticket.title,
+            )
         except Exception as e:
             print("Error al crear la notificacion -->", e)
 
