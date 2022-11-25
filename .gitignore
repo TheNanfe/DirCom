@@ -1,6 +1,7 @@
 #Ignora los archivos del vscode
 .vscode
 dircom_venv/
+venv/
 env.json
 #Ignora los pycache
 __pycache__
