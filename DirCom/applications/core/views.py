@@ -1,10 +1,9 @@
-from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView
 from django.urls import reverse_lazy
 from django.db.models import Q
-
 from applications.tickets.models import Ticket
+
 
 # Create your views here.
 class HomeView(LoginRequiredMixin, ListView):
