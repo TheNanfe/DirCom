@@ -27,7 +27,7 @@
                 <li><strong>Correo electrónico:</strong> {{ usuario.persona.email }}</li>
                 <li><strong>Ciudad:</strong> {{ usuario.persona.city }}</li>
                 <li><strong>Nro de teléfono:</strong> {{ usuario.persona.phone }}</li>
-                <li><strong>Dependencia:</strong> {{ usuario.persona.area }}</li>
+                <li><strong>Dependencia:</strong> {{ usuario.persona.get_dependency_display }}</li>
                 <li><strong>Tipo de vinculación:</strong> {{ usuario.persona.get_vinc_type_display }}</li>
             </ul>
             <hr class="my-5" />
