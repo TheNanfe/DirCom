@@ -84,11 +84,12 @@ class UserRegisterView(LoginRequiredMixin, FormView):
     def form_valid(self, form):
         # llamamos al método create_user que sobreescribimos
         # en el archivo managers.py
+        print()
         User.objects.create_user(
             form.cleaned_data["username"],
-            form.cleaned_data["persona"],
-            form.cleaned_data["role"],
-            form.cleaned_data["custom_password"],
+            persona=form.cleaned_data["persona"],
+            role=form.cleaned_data["role"],
+            password=form.cleaned_data["custom_password"],
         )
 
         return super(UserRegisterView, self).form_valid(form)
