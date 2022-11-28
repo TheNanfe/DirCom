@@ -8,6 +8,7 @@ from django.http import HttpResponseRedirect
 
 from applications.notifications.models import Notification
 from ...notifications.notifications_utils import create_notification
+from ..ticket_utils import *
 from applications.tickets.models import Comment, Ticket, Category
 from applications.tickets.forms import (
     AddTicketForm,
@@ -61,6 +62,24 @@ class DetailTicketView(LoginRequiredMixin, DetailView):
     context_object_name = "ticket"
     login_url = reverse_lazy("users_app:login")
 
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        sub_category = Ticket.objects.filter(pk=self.kwargs['pk']).values("sub_category")
+        try:
+            sub_category_dict = sub_category[0]
+            sub_category_dict = parse_json_data(sub_category_dict["sub_category"])
+            service_key = None
+            for key in sub_category_dict:
+                service_key = key
+
+            service_extra_info = sub_category_dict[service_key]
+            context["service_type"] = get_service_name(service_key)
+            context["service_extra_info"] = service_extra_info
+        except Exception as e:
+            print("Exception has occured --> ", e)
+            context["service_type"] = "---"
+        return context
+
 
 class CreateTicketView(LoginRequiredMixin, FormView):
     form_class = AddTicketForm
@@ -75,6 +94,7 @@ class CreateTicketView(LoginRequiredMixin, FormView):
             return super(CreateTicketView, self).dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
+        service_info = get_json_data(form)
         created_ticket = Ticket.objects.create(
             user=self.request.user,
             email=form.cleaned_data["email"],
@@ -82,10 +102,12 @@ class CreateTicketView(LoginRequiredMixin, FormView):
             content=form.cleaned_data["content"],
             file=form.cleaned_data["file"],
             category=form.cleaned_data["category"],
+            sub_category=json.dumps(service_info),
         )
         # codigo comentado por si se utilice alguna vez
         """create_notification("created_ticket", ticket_id=created_ticket.id, ticket_title=created_ticket.title,
                             user_id=self.request.user.pk)"""
+
         return super().form_valid(form)
 
 
@@ -207,6 +229,24 @@ class EditTicketView(LoginRequiredMixin, UpdateView):
             return AdminEditTicketForm
         if self.request.user.role == 2:
             return EditTicketForm
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        sub_category = Ticket.objects.filter(pk=self.kwargs['pk']).values("sub_category")
+        try:
+            sub_category_dict = sub_category[0]
+            sub_category_dict = parse_json_data(sub_category_dict["sub_category"])
+            service_key = None
+            for key in sub_category_dict:
+                service_key = key
+
+            service_extra_info = sub_category_dict[service_key]
+            context["service_type"] = get_service_name(service_key)
+            context["service_extra_info"] = service_extra_info
+        except Exception as e:
+            print("Exception has occured --> ", e)
+            context["service_type"] = "---"
+        return context
 
 
 class CreateCommentView(LoginRequiredMixin, FormView):
