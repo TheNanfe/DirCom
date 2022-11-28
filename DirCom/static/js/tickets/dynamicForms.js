@@ -1,7 +1,7 @@
 $("#id_category").change(function () {
     let dynamicSelect = $("#dynamic-select");
     let category = $("#id_category");
-    if (category.val() == 1) {
+    if (category.val() === "PRENSA") {
         let html = (
             '<label for="id_service">Servicio a Solicitar:</label>\
             <select id="type-service" class="form-control  mb-3" name="press-redaction" style="margin-bottom:5px;">\
@@ -15,7 +15,7 @@ $("#id_category").change(function () {
             <div id="extra-info"></div>'
         );
         dynamicSelect.html(html);
-    } else if (category.val() == 2) {
+    } else if (category.val() === "AUDIOVISUAL") {
         let html = (
             '<label for="id_service">Servicio a Solicitar:</label>\
             <select id="type-service" class="form-control  mb-3" name="audiovisual" style="margin-bottom:5px;">\
@@ -27,7 +27,7 @@ $("#id_category").change(function () {
             <div id="extra-info"></div>'
         );
         dynamicSelect.html(html);
-    } else if (category.val() == 3) {
+    } else if (category.val() === "DISENHO") {
         let html = (
             '<label for="id_service">Servicio a Solicitar:</label>\
             <select id="type-service" class="form-control  mb-3" name="graphic-design" style="margin-bottom:5px;">\
@@ -38,7 +38,7 @@ $("#id_category").change(function () {
             <div id="extra-info"></div>'
         );
         dynamicSelect.html(html);
-    } else if (category.val() == 4) {
+    } else if (category.val() === "WEB") {
         let html = (
             '<label for="id_service">Servicio a Solicitar:</label>\
             <select id="type-service" class="form-control  mb-3 " name="graphic-design" style="margin-bottom:5px;">\
@@ -96,7 +96,7 @@ $("#dynamic-select").on("change", "#type-service", function () {
                  <label for="id_content2">Objetivos del Material:</label>\
                  <textarea name="content2" cols="40" rows="3" class="form-control mb-3" required="" id="id_content2"></textarea>\
                  <label for="id_content3">Fecha Limite para entrega:</label>\
-                 <input type="date" name="content3" cols="40" rows="3" class="form-control mb-3" required="" id="id_content3">\
+                 <input type="date" name="content3" cols="20" rows="3" class="mb-3" required="" id="id_content3">\
                  <label for="id_content4">Destino: donde se presentará el material para realizarlo en el formato adecuado:</label>\
                  <textarea name="content4" cols="40" rows="3" class="form-control mb-3" required="" id="id_content4"></textarea>\
                  <label for="id_content5">Responsable del área y horario:</label>\
@@ -117,7 +117,7 @@ $("#dynamic-select").on("change", "#type-service", function () {
                  <label for="id_content2">Observaciones generales:</label>\
                  <textarea name="content2" cols="40" rows="3" class="form-control mb-3" required="" id="id_content2"></textarea>\
                  <label for="id_content3">Fecha de grabación:</label>\
-                 <input type="date" name="content3" cols="40" rows="3" class="form-control mb-3" required="" id="id_content3">\
+                 <input type="date" name="content3" cols="20" rows="3" class="mb-3" required="" id="id_content3">\
                  <label for="id_content4">Referencias (link material similar al deseado):</label>\
                  <textarea name="content4" cols="40" rows="3" class="form-control mb-3" required="" id="id_content4"></textarea>\
                  <label for="id_content5">Responsable del área y horario:</label>\
@@ -132,7 +132,7 @@ $("#dynamic-select").on("change", "#type-service", function () {
                  <label for="id_content1">Indicaciones generales para edición:</label>\
                  <textarea name="content1" cols="40" rows="3" class="form-control mb-3" required="" id="id_content1"></textarea>\
                  <label for="id_content2">Fecha Limite para entrega:</label>\
-                 <input type="date" name="content2" cols="40" rows="3" class="form-control mb-3" required="" id="id_content2">\
+                 <input type="date" name="content2" cols="20" rows="3" class="mb-3" required="" id="id_content2">\
                  <label for="id_content3">Responsable del área y horario:</label>\
                  <textarea name="content3" cols="40" rows="3" class="form-control mb-3" required="" id="id_content3"></textarea>\
                  <label for="id_content4">Objetivos del Material:</label>\
@@ -145,7 +145,7 @@ $("#dynamic-select").on("change", "#type-service", function () {
                  <label for="id_content1">Nombre de Actividad:</label>\
                  <textarea name="content1" cols="40" rows="3" class="form-control mb-3" required="" id="id_content1"></textarea>\
                  <label for="id_content2">Fecha:</label>\
-                 <input type="date" name="content2" cols="40" rows="3" class="form-control mb-3" required="" id="id_content2">\
+                 <input type="date" name="content2" cols="20" rows="3" class="mb-3" required="" id="id_content2">\
                  <label for="id_content3">Lugar de Actividad:</label>\
                  <textarea name="content3" cols="40" rows="3" class="form-control mb-3" required="" id="id_content3"></textarea>\
                  <label for="id_content4">Mensaje a Comunicar:</label>\

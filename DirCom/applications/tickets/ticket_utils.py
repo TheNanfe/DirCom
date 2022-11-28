@@ -4,7 +4,7 @@ import json
 def get_json_data(form):
     extra_info = []
     service_info = {}
-    if int(form.data["category"]) == 1:
+    if form.data["category"] == "PRENSA":
 
         if form.data["press-redaction"] == "DISCURSO":
             extra_info.append({"content": form.data["content1"], "description": "Informe Completo"})
@@ -31,7 +31,7 @@ def get_json_data(form):
         else:
             service_info = {"EVENTO": []}
 
-    if int(form.data["category"]) == 2:
+    if form.data["category"] == "AUDIOVISUAL":
         if form.data["audiovisual"] == "GUION":
             extra_info.append({"content": form.data["content1"], "description": "Descripción general de la idea"})
             extra_info.append({"content": form.data["content2"], "description": "Objetivos del Material"})
@@ -62,7 +62,7 @@ def get_json_data(form):
 
             service_info = {"AUDIOVISUAL": extra_info}
 
-    if int(form.data["category"]) == 3:
+    if form.data["category"] == "DISENHO":
         if form.data["graphic-design"] == "FLYER":
             extra_info.append({"content": form.data["content1"], "description": "Nombre de Actividad"})
             extra_info.append({"content": form.data["content2"], "description": "Fecha"})
@@ -78,7 +78,7 @@ def get_json_data(form):
 
             service_info = {"COMUNICADO": extra_info}
 
-    if int(form.data["category"]) == 4:
+    if form.data["category"] == "WEB":
         if form.data["WEB"] == "WEB":
             extra_info.append({"content": form.data["content1"], "description": "Objetivos del sitio web"})
             extra_info.append({"content": form.data["content2"], "description": "Referencias para el sitio web"})

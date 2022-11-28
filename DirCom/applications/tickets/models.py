@@ -27,6 +27,14 @@ class Ticket(models.Model):
         (4, "Baja"),
     )
 
+    CATEGORIES = (
+        ("", "---------"),
+        ("PRENSA", "Prensa y Redacción"),
+        ("AUDIOVISUAL", "Audiovisual"),
+        ("DISENHO", "Diseño Grafico"),
+        ("WEB", "Web"),
+    )
+
     user = models.ForeignKey(
         User,
         verbose_name="autor",
@@ -47,9 +55,7 @@ class Ticket(models.Model):
     file = models.ImageField(
         "archivo adjunto", upload_to="files", blank=True, null=True
     )
-    category = models.ForeignKey(
-        Category, verbose_name="categoría", on_delete=models.CASCADE
-    )
+    category = models.CharField("categoria", max_length=50, choices=CATEGORIES, default="")
     status = models.PositiveSmallIntegerField(
         "estado", choices=STATUS_CHOICES, default=STATUS_CHOICES[0][0]
     )

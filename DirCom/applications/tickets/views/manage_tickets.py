@@ -1,5 +1,3 @@
-import json
-
 from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, DetailView, TemplateView, UpdateView, View
