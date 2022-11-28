@@ -8,4 +8,5 @@ urlpatterns = [
     path("", include("applications.users.urls")),
     path("", include("applications.core.urls")),
     path("tickets/", include("applications.tickets.urls")),
+    path("notifications/", include("applications.notifications.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

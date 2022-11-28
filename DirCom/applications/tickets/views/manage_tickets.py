@@ -6,6 +6,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.http import HttpResponseRedirect
 
+from applications.notifications.models import Notification
+from ...notifications.notifications_utils import create_notification
 from ..ticket_utils import *
 from applications.tickets.models import Comment, Ticket, Category
 from applications.tickets.forms import (
@@ -94,6 +96,7 @@ class CreateTicketView(LoginRequiredMixin, FormView):
     def form_valid(self, form):
         service_info = get_json_data(form)
         ticket = Ticket.objects.create(
+        created_ticket = Ticket.objects.create(
             user=self.request.user,
             email=form.cleaned_data["email"],
             title=form.cleaned_data["title"],
@@ -102,6 +105,9 @@ class CreateTicketView(LoginRequiredMixin, FormView):
             category=form.cleaned_data["category"],
             sub_category=json.dumps(service_info),
         )
+        # codigo comentado por si se utilice alguna vez
+        """create_notification("created_ticket", ticket_id=created_ticket.id, ticket_title=created_ticket.title,
+                            user_id=self.request.user.pk)"""
 
         return super().form_valid(form)
 
@@ -131,15 +137,21 @@ class AproveTicketView(LoginRequiredMixin, View):
         ticket = Ticket.objects.get(pk=pk)
         ticket.status = 2
         ticket.save()
+        current_admin = self.request.user.pk
+        create_notification(
+            "approve_ticket",
+            ticket_id=ticket.id,
+            ticket_title=ticket.title,
+            user_id=ticket.user_id,
+            current_admin=current_admin,
+        )
         return HttpResponseRedirect(reverse("tickets_app:edit", kwargs={"pk": pk}))
 
     def dispatch(self, request, *args, **kwargs):
         if request.user.role != 1:
             return redirect("core_app:home")
         else:
-            return super(AproveTicketView, self).dispatch(
-                request, *args, **kwargs
-            )
+            return super(AproveTicketView, self).dispatch(request, *args, **kwargs)
 
 
 class RejectTicketView(LoginRequiredMixin, View):
@@ -152,15 +164,23 @@ class RejectTicketView(LoginRequiredMixin, View):
         ticket = Ticket.objects.get(pk=pk)
         ticket.status = 4
         ticket.save()
-        return HttpResponseRedirect(reverse("tickets_app:reject_message", kwargs={"pk": pk}))
+        current_admin = self.request.user.pk
+        create_notification(
+            "reject_ticket",
+            ticket_id=ticket.id,
+            ticket_title=ticket.title,
+            user_id=ticket.user_id,
+            current_admin=current_admin,
+        )
+        return HttpResponseRedirect(
+            reverse("tickets_app:reject_message", kwargs={"pk": pk})
+        )
 
     def dispatch(self, request, *args, **kwargs):
         if request.user.role != 1:
             return redirect("core_app:home")
         else:
-            return super(RejectTicketView, self).dispatch(
-                request, *args, **kwargs
-            )
+            return super(RejectTicketView, self).dispatch(request, *args, **kwargs)
 
 
 class RejectMessageTicketView(LoginRequiredMixin, UpdateView):
@@ -192,6 +212,20 @@ class EditTicketView(LoginRequiredMixin, UpdateView):
     login_url = reverse_lazy("users_app:login")
 
     def get_form_class(self):
+        # Se crea la notificación de asignación de tickets
+        if self.request.method == "POST":
+            try:
+                data = self.request.POST
+                create_notification(
+                    "ticket_assignment",
+                    ticket_id=self.kwargs["pk"],
+                    agent_id=data["agent"],
+                    current_agent=str(self.object.agent_id),
+                    ticket_title=data["title"],
+                )
+            except Exception as e:
+                print("Error al crear la notificacion -->", e)
+
         if self.request.user.role == 1:
             return AdminEditTicketForm
         if self.request.user.role == 2:
@@ -230,12 +264,25 @@ class CreateCommentView(LoginRequiredMixin, FormView):
         return url
 
     def form_valid(self, form):
+        ticket = Ticket.objects.get(pk=self.kwargs["ticket_id"])
         Comment.objects.create(
             user=self.request.user,
-            ticket=Ticket.objects.get(pk=self.kwargs["ticket_id"]),
+            ticket=ticket,
             content=form.cleaned_data["content"],
             file=form.cleaned_data["file"],
         )
+        try:
+            create_notification(
+                "comment_creation",
+                ticket_id=ticket.id,
+                user_id=ticket.user_id,
+                agent_id=ticket.agent_id,
+                current_user=self.request.user.pk,
+                ticket_title=ticket.title,
+            )
+        except Exception as e:
+            print("Error al crear la notificacion -->", e)
+
         return super().form_valid(form)
 
 

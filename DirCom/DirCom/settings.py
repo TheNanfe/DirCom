@@ -50,6 +50,7 @@ LOCAL_APPS = [
     "applications.users",
     "applications.core",
     "applications.tickets",
+    "applications.notifications",
 ]
 
 THIRD_PARTY_APPS = []
@@ -66,7 +67,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "dircom.urls"
+ROOT_URLCONF = "DirCom.urls"
 
 TEMPLATES = [
     {
@@ -80,11 +81,14 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
             ],
+            "libraries":{
+                "notifications_filters": "applications.notifications.notifications_filters",
+            },
         },
     },
 ]
 
-WSGI_APPLICATION = "dircom.wsgi.application"
+WSGI_APPLICATION = "DirCom.wsgi.application"
 
 
 # Database
@@ -149,3 +153,14 @@ AUTH_USER_MODEL = "users.User"
 # Manejo de imágenes
 MEDIA_URL = "uploads/"  # link visible en el browser
 MEDIA_ROOT = str(BASE_DIR / "static/uploads")  # carpeta donde se guardan las subidas
+
+EMAIL_HOST = env("EMAIL_HOST")
+EMAIL_HOST_USER = env("EMAIL_HOST_USER")
+EMAIL_FROM = env("EMAIL_FROM")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
+EMAIL_PORT = "465"
+EMAIL_USE_SSL = True
+
+# este es el dominio donde alojamos nuestra app
+# en local usualmente es localhost:8000
+APP_DOMAIN = env("APP_DOMAIN")
