@@ -92,12 +92,11 @@
         <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
              data-bs-parent="#accordionExample">
             <p>
-                <label for="id_service_type">Servicio Solicitado:</label>
-                {{ service_type }}
+                <h5 class="mb-3" for="id_service_type"><b>Servicio Solicitado: </b>{{ service_type }}</h5>
             </p>
             {% for extra_info in service_extra_info %}
                 <p>
-                    <label>{{ extra_info.description }}:</label>
+                    <label><b>{{ extra_info.description }}:</b></label>
                     {{ extra_info.content }}
                 </p>
             {% endfor %}
