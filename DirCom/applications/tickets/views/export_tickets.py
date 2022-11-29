@@ -10,17 +10,15 @@ from reportlab.lib.pagesizes import letter
 from datetime import date, datetime, timedelta
 from django.utils import formats
 
-from applications.tickets.models import Ticket, Category
+from applications.tickets.models import Ticket
 from applications.users.models import User
 
 
 def export_tickets(request):
     agents = User.objects.filter(role=2)
-    categories = Category.objects.all()
     today = datetime.today().strftime("%Y-%m-%d")
     context = {
         "agents": agents,
-        "categories": categories,
         "today": today,
     }
     return render(request, "tickets/export.html", context)
@@ -185,15 +183,13 @@ def tickets_reports(request):
         result[formatDate(ticket.created_at)] += 1
 
     agents = User.objects.filter(role=2)
-    categories = Category.objects.all()
     today = datetime.today().strftime("%Y-%m-%d")
     default_from = (datetime.today() - timedelta(days=7)).strftime("%Y-%m-%d")
 
     context = {
-        "result": json.dumps(result), 
+        "result": json.dumps(result),
         "today": today,
         "default_from": default_from,
         "agents": agents,
-        "categories": categories
     }
     return render(request, "tickets/reports.html", context)

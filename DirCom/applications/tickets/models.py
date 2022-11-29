@@ -2,16 +2,6 @@ from django.db import models
 from applications.users.models import User
 
 
-class Category(models.Model):
-    title = models.CharField("título de la categoría", max_length=50)
-
-    class Meta:
-        verbose_name = "categoría"
-
-    def __str__(self):
-        return f"{self.title}"
-
-
 class Ticket(models.Model):
     STATUS_CHOICES = (
         (1, "Pendiente"),
@@ -28,7 +18,7 @@ class Ticket(models.Model):
     )
 
     CATEGORIES = (
-        ("", "---------"),
+        (None, "---------"),
         ("PRENSA", "Prensa y Redacción"),
         ("AUDIOVISUAL", "Audiovisual"),
         ("DISENHO", "Diseño Grafico"),
