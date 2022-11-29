@@ -2,6 +2,7 @@ from django import forms
 from django import forms
 from .models import Comment, Ticket
 from applications.users.models import User
+from .ticket_utils import parse_json_data
 
 
 class AddTicketForm(forms.ModelForm):
@@ -21,7 +22,8 @@ class AdminEditTicketForm(forms.ModelForm):
     class Meta:
         model = Ticket
         fields = "__all__"
-        exclude = ('rejection_message',)
+        exclude = ('rejection_message', 'sub_category')
+
         widgets = {
             "user": forms.Select(
                 attrs={"readonly": True}
@@ -62,7 +64,7 @@ class EditTicketForm(forms.ModelForm):
     class Meta:
         model = Ticket
         fields = "__all__"
-        exclude = ["agent", "rejection_message"]
+        exclude = ["agent", "rejection_message", "sub_category"]
         widgets = {
             "user": forms.Select(
                 attrs={"readonly": True}
