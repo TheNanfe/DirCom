@@ -10,6 +10,43 @@ class Persona(models.Model):
         previo a crear un usuario, en este modelo se guardan todos
         los datos personales
     """
+    DEPENDENCIES_CHOICES = (
+        ("1", "Rectorado - Gabinete"),
+        ("2", "Vice Rectorado"),
+        ("3", "Rectorado - Secretaria General"),
+        ("4", "Rectorado - Asesoría Jurídica"),
+        ("5", "Rectorado - Auditoría General"),
+        ("6", "Rectorado - DGA"),
+        ("7", "Rectorado - DGAyF"),
+        ("8", "Rectorado - DGEU"),
+        ("9", "Rectorado - DGICT"),
+        ("10", "Rectorado - DGGyTH"),
+        ("11", "Rectorado - DGOTI"),
+        ("12", "Rectorado - DGPD"),
+        ("13", "Rectorado - DGP"),
+        ("14", "Rectorado - DGPRI"),
+        ("15","CNC - UNA"),
+        ("16","CNEA - UNA"),
+        ("17","CEMIT - UNA"),
+        ("18","CETTRI - UNA"),
+        ("19","IICS - UNA"),
+        ("20","Biblioteca Central"),
+        ("21", "INCUNA"),
+        ("22", "UA - FDCS"),
+        ("23", "UA - FCM"),
+        ("24", "UA - FI"),
+        ("25", "UA - FCE"),
+        ("26", "UA - FO"),
+        ("27", "UA - FCQ"),
+        ("28", "UA - FCA"),
+        ("29", "UA - FF"),
+        ("30", "UA - FCV"),
+        ("31", "UA - FADA"),
+        ("32", "UA - FP"),
+        ("33", "UA - FACEN"),
+        ("34", "UA - FENOB"),
+        ("35", "UA - FACSO"),
+    )
 
     VINC_CHOICES = (("1", "Contratado"), ("2", "Permanente"),)
 
@@ -22,7 +59,7 @@ class Persona(models.Model):
     last_name = models.CharField("apellidos", blank=True, null=True, max_length=150)
     city = models.CharField("ciudad", blank=True, null=True,  max_length=30)
     phone = models.CharField("número de teléfono", blank=True, null=True, max_length=30)
-    area = models.CharField("dependencia", blank=True, null=True, max_length=150)
+    dependency = models.CharField("dependencia", blank=True, null=True, choices=DEPENDENCIES_CHOICES, max_length=2)
     vinc_type = models.CharField("tipo de vinculación", blank=True, null=True, choices=VINC_CHOICES, max_length=1)
 
     class Meta:
