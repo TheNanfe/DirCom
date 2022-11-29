@@ -9,7 +9,7 @@ from django.http import HttpResponseRedirect
 from applications.notifications.models import Notification
 from ...notifications.notifications_utils import create_notification
 from ..ticket_utils import *
-from applications.tickets.models import Comment, Ticket, Category
+from applications.tickets.models import Comment, Ticket
 from applications.tickets.forms import (
     AddTicketForm,
     AddCommentForm,

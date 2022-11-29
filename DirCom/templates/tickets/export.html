@@ -42,9 +42,10 @@
                 <label for="category">Categoría</label>
                 <select class="form-control" name="category" id="category">
                     <option value="" selected>Todos</option>
-                    {% for category in categories %}
-                    <option value="{{ category.id }}">{{ category.title  }}</option>
-                    {% endfor %}
+                    <option value="PRENSA">Prensa y Redacción</option>
+                    <option value="AUDIOVISUAL">Audiovisual</option>
+                    <option value="DISENHO">Diseño Grafico</option>
+                    <option value="WEB">Web</option>
                 </select>
             </div>
             <div class="row mt-4">
