@@ -35,6 +35,8 @@ class AllTicketsView(LoginRequiredMixin, ListView):
         # solo tickets asignados al analista
         if self.request.user.role == 2:
             tickets = Ticket.objects.filter(agent=self.request.user).filter(
+                ~Q(status=3)
+            ).filter(
                 ~Q(status=4)
             )
         # solo tickets propios para el cliente
