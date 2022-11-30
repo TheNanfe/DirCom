@@ -97,7 +97,6 @@ class CreateTicketView(LoginRequiredMixin, FormView):
         service_info = get_json_data(form)
         created_ticket = Ticket.objects.create(
             user=self.request.user,
-            email=form.cleaned_data["email"],
             title=form.cleaned_data["title"],
             content=form.cleaned_data["content"],
             file=form.cleaned_data["file"],
