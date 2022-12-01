@@ -222,6 +222,17 @@ class EditTicketView(LoginRequiredMixin, UpdateView):
                     current_agent=str(self.object.agent_id),
                     ticket_title=data["title"],
                 )
+                # notificacion para el cambio de status de los tickets
+                create_notification(
+                    "ticket_status_change",
+                    ticket_id=self.object.pk,
+                    user_id=self.object.user_id,
+                    agent_id=self.object.agent_id,
+                    current_agent=self.request.user.pk,
+                    status_change=int(data['status']),
+                    current_status=self.object.status,
+                    ticket_title=self.object.title
+                )
             except Exception as e:
                 print("Error al crear la notificacion -->", e)
 

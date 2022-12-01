@@ -42,7 +42,7 @@
         <ul class="rounded border">
             {% if notifications %}
                 {% for notification in notifications %}
-                    {% if notification.notification_type == "ticket_assignment" or notification.notification_type == "comment_creation" or notification.notification_type == "reject_ticket" or notification.notification_type == "approve_ticket" %}
+                    {% if notification.notification_type == "ticket_assignment" or notification.notification_type == "comment_creation" or notification.notification_type == "reject_ticket" or notification.notification_type == "approve_ticket" or notification.notification_type == "ticket_status_change" %}
                         {% if notification.status_read == "READ" %}
                             <li class="mb-2 not_all">
                                 <input type="hidden" id="{{ notification.id }}"

@@ -1,4 +1,5 @@
 from .models import Notification
+from ..tickets.models import Ticket
 from ..users.models import User
 from django.template.loader import render_to_string
 from django.template.defaultfilters import striptags
@@ -57,6 +58,18 @@ def create_notification(notification_type, **kwargs):
                 kwargs["agent_id"],
                 kwargs["current_agent"],
                 kwargs["ticket_title"],
+            )
+
+        if notification_type == "ticket_status_change":
+            notification_created = ticket_status_change(
+                notification_type,
+                kwargs['ticket_id'],
+                kwargs['user_id'],
+                kwargs['agent_id'],
+                kwargs['current_agent'],
+                kwargs['status_change'],
+                kwargs['current_status'],
+                kwargs['ticket_title']
             )
 
             # enviar mail al agente
@@ -151,6 +164,7 @@ def created_ticket(notification_type, ticket_id, ticket_title, user_id):
 
 def reject_ticket(notification_type, ticket_id, ticket_title, user_id, current_admin):
     message = "Ticket #" + str(ticket_id) + " Rechazado : "
+
     try:
         creation(ticket_id, message, user_id, notification_type, ticket_title)
         admin_list = User.objects.filter(role=1).values("pk")
@@ -166,6 +180,7 @@ def reject_ticket(notification_type, ticket_id, ticket_title, user_id, current_a
 
 def approve_ticket(notification_type, ticket_id, ticket_title, user_id, current_admin):
     message = "Ticket #" + str(ticket_id) + " Aprobado : "
+
     try:
         creation(ticket_id, message, user_id, notification_type, ticket_title)
         admin_list = User.objects.filter(role=1).values("pk")
@@ -205,3 +220,38 @@ def get_notifications_for_user(user_notifications):
         )
     notifications["notifications"] = notification_array
     return notifications
+
+
+def ticket_status_change(
+        notification_type, ticket_id, user_id, agent_id, current_agent, status_change, current_status, ticket_title ):
+
+    status_to_change = Ticket.STATUS_CHOICES[status_change-1][1]
+    message = "Cambio estado Ticket #" + str(ticket_id) + ": " + status_to_change
+    notification_created = False
+
+    try:
+        if current_status != status_change:
+
+            if status_to_change != "Pendiente":
+                creation(ticket_id, message, user_id, notification_type, ticket_title)
+                notification_created = True
+
+            if current_agent != agent_id and agent_id is not None:
+                creation(ticket_id, message, agent_id, notification_type, ticket_title)
+                notification_created = True
+
+            if status_to_change == "Rechazado":
+                admin_list = User.objects.filter(role=1).values("pk")
+                for admin in admin_list:
+                    if admin["pk"] != current_agent:
+                        creation(
+                            ticket_id, message, admin["pk"], notification_type, ticket_title
+                        )
+
+                    notification_created = True
+
+            return notification_created
+
+    except Exception as e:
+        raise e
+
