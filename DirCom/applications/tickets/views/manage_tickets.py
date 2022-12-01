@@ -17,6 +17,7 @@ from applications.tickets.forms import (
     AdminEditTicketForm,
     EditTicketForm,
     RejectionMessageForm,
+    AssignTicketForm,
 )
 
 
@@ -36,6 +37,8 @@ class AllTicketsView(LoginRequiredMixin, ListView):
         # solo tickets asignados al analista
         if self.request.user.role == 2:
             tickets = Ticket.objects.filter(agent=self.request.user).filter(
+                ~Q(status=3)
+            ).filter(
                 ~Q(status=4)
             )
         # solo tickets propios para el cliente
@@ -98,7 +101,6 @@ class CreateTicketView(LoginRequiredMixin, FormView):
         service_info = get_json_data(form)
         created_ticket = Ticket.objects.create(
             user=self.request.user,
-            email=form.cleaned_data["email"],
             title=form.cleaned_data["title"],
             content=form.cleaned_data["content"],
             file=form.cleaned_data["file"],
@@ -145,7 +147,7 @@ class AproveTicketView(LoginRequiredMixin, View):
             user_id=ticket.user_id,
             current_admin=current_admin,
         )
-        return HttpResponseRedirect(reverse("tickets_app:edit", kwargs={"pk": pk}))
+        return HttpResponseRedirect(reverse("tickets_app:assign", kwargs={"pk": pk}))
 
     def dispatch(self, request, *args, **kwargs):
         if request.user.role != 1:
@@ -181,6 +183,27 @@ class RejectTicketView(LoginRequiredMixin, View):
             return redirect("core_app:home")
         else:
             return super(RejectTicketView, self).dispatch(request, *args, **kwargs)
+
+
+class AssignTicketView(LoginRequiredMixin, UpdateView):
+    """vista para que el admin asigne un analista a un ticket luego de aprobar"""
+    model = Ticket
+    template_name = "tickets/assign.html"
+    login_url = reverse_lazy("users_app:login")
+    form_class = AssignTicketForm
+
+    def get_success_url(self, **kwargs):
+        ticket = self.kwargs.get("pk")
+        url = reverse("tickets_app:detail", kwargs={"pk": ticket})
+        return url
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.role != 1:
+            return redirect("core_app:home")
+        else:
+            return super(AssignTicketView, self).dispatch(
+                request, *args, **kwargs
+            )
 
 
 class RejectMessageTicketView(LoginRequiredMixin, UpdateView):

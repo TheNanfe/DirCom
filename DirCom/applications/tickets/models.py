@@ -39,7 +39,6 @@ class Ticket(models.Model):
         blank=True,
         null=True,
     )
-    email = models.EmailField("correo electrónico", max_length=254)
     title = models.CharField("título", max_length=150)
     content = models.TextField("contenido")
     file = models.ImageField(

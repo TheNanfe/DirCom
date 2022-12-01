@@ -8,7 +8,7 @@ from .ticket_utils import parse_json_data
 class AddTicketForm(forms.ModelForm):
     class Meta:
         model = Ticket
-        fields = ["email", "title", "content", "file", "category"]
+        fields = ["title", "content", "file", "category"]
 
     def __init__(self, *args, **kwargs):
         super(AddTicketForm, self).__init__(*args, **kwargs)
@@ -29,9 +29,6 @@ class AdminEditTicketForm(forms.ModelForm):
                 attrs={"readonly": True}
             ),
             "content": forms.Textarea(
-                attrs={"readonly": True}
-            ),
-            "email": forms.EmailInput(
                 attrs={"readonly": True}
             ),
             "title": forms.TextInput(
@@ -58,8 +55,21 @@ class RejectionMessageForm(forms.ModelForm):
             visible.field.widget.attrs["class"] = "form-control"
 
 
+class AssignTicketForm(forms.ModelForm):
+
+    class Meta:
+        model = Ticket
+        fields = ["agent"]
+
+    def __init__(self, *args, **kwargs):
+        super(AssignTicketForm, self).__init__(*args, **kwargs)
+        self.fields['agent'].queryset = User.objects.filter(role=2)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs["class"] = "form-control"
+
+
 class EditTicketForm(forms.ModelForm):
-    field_order = ["status", "content", "email"]
+    field_order = ["status", "content"]
 
     class Meta:
         model = Ticket
@@ -70,9 +80,6 @@ class EditTicketForm(forms.ModelForm):
                 attrs={"readonly": True}
             ),
             "content": forms.Textarea(
-                attrs={"readonly": True}
-            ),
-            "email": forms.EmailInput(
                 attrs={"readonly": True}
             ),
             "title": forms.TextInput(
