@@ -146,6 +146,7 @@ class AproveTicketView(LoginRequiredMixin, View):
             ticket_title=ticket.title,
             user_id=ticket.user_id,
             current_admin=current_admin,
+            request=self.request,
         )
         return HttpResponseRedirect(reverse("tickets_app:assign", kwargs={"pk": pk}))
 
@@ -173,6 +174,7 @@ class RejectTicketView(LoginRequiredMixin, View):
             ticket_title=ticket.title,
             user_id=ticket.user_id,
             current_admin=current_admin,
+            request=self.request
         )
         return HttpResponseRedirect(
             reverse("tickets_app:reject_message", kwargs={"pk": pk})
@@ -245,8 +247,8 @@ class EditTicketView(LoginRequiredMixin, UpdateView):
                     agent_id=data["agent"],
                     current_agent=str(self.object.agent_id),
                     ticket_title=data["title"],
+                    user_id=self.object.user_id,
                     request=self.request,
-                    user_id=self.object.user_id
                 )
                 # notificacion para el cambio de status de los tickets
                 create_notification(
@@ -257,7 +259,8 @@ class EditTicketView(LoginRequiredMixin, UpdateView):
                     current_agent=self.request.user.pk,
                     status_change=int(data['status']),
                     current_status=self.object.status,
-                    ticket_title=self.object.title
+                    ticket_title=self.object.title,
+                    request=self.request,
                 )
             except Exception as e:
                 print("Error al crear la notificacion -->", e)
@@ -315,6 +318,7 @@ class CreateCommentView(LoginRequiredMixin, FormView):
                 agent_id=ticket.agent_id,
                 current_user=self.request.user.pk,
                 ticket_title=ticket.title,
+                request=self.request,
             )
         except Exception as e:
             print("Error al crear la notificacion -->", e)

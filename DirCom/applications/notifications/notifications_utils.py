@@ -53,6 +53,7 @@ def create_notification(notification_type, **kwargs):
                 kwargs["agent_id"],
                 kwargs["current_user"],
                 kwargs["ticket_title"],
+                kwargs["request"],
             )
 
         if notification_type == "ticket_assignment":
@@ -62,8 +63,8 @@ def create_notification(notification_type, **kwargs):
                 kwargs["agent_id"],
                 kwargs["current_agent"],
                 kwargs["ticket_title"],
+                kwargs["user_id"],
                 kwargs["request"],
-                kwargs["user_id"]
             )
 
         if notification_type == "ticket_status_change":
@@ -76,6 +77,7 @@ def create_notification(notification_type, **kwargs):
                 kwargs['status_change'],
                 kwargs['current_status'],
                 kwargs['ticket_title'],
+                kwargs["request"],
             )
 
         if notification_type == "created_ticket":
@@ -95,6 +97,7 @@ def create_notification(notification_type, **kwargs):
                 kwargs["ticket_title"],
                 kwargs["user_id"],
                 kwargs["current_admin"],
+                kwargs["request"],
             )
 
         if notification_type == "approve_ticket":
@@ -104,6 +107,16 @@ def create_notification(notification_type, **kwargs):
                 kwargs["ticket_title"],
                 kwargs["user_id"],
                 kwargs["current_admin"],
+                kwargs["request"],
+            )
+
+        if notification_type == "user_creation":
+            notification_created = user_created(
+                notification_type,
+                kwargs["user_id"],
+                kwargs["username"],
+                kwargs["current_user"],
+                kwargs["request"]
             )
 
         if notification_created:
@@ -115,7 +128,7 @@ def create_notification(notification_type, **kwargs):
 
 
 def comment_creation(
-    notification_type, ticket_id, user_id, agent_id, current_user, ticket_title
+    notification_type, ticket_id, user_id, agent_id, current_user, ticket_title, request
 ):
     notification_created = False
     message = "Nuevo Comentario Ticket #" + str(ticket_id) + ": "
@@ -123,10 +136,38 @@ def comment_creation(
         # notificacion para el agente
         if agent_id != "" and agent_id != current_user:
             creation(ticket_id, message, agent_id, notification_type, ticket_title)
+
+            # mail de notificacion para ticket comentado
+            # enviar mail al cliente
+            send_email_notification(
+                "Ticket comentado",
+                {
+                    "title": "Ticket comentado",
+                    "content": "Un ticket al cual se encuentra asignado ha sido comentado",
+                    "url": request.get_host() + reverse("tickets_app:detail", kwargs={"pk": ticket_id}),
+                    "action_text": "Ver mi ticket",
+                },
+                User.objects.get(pk=agent_id).persona.email,
+            )
             notification_created = True
+
         # notificacion para el cliente
         if user_id != current_user:
             creation(ticket_id, message, user_id, notification_type, ticket_title)
+
+            # mail para notificar al cliente que su ticket fue comentado
+            # enviar mail al cliente
+            send_email_notification(
+                "Ticket Comentado",
+                {
+                    "title": "Su ticket ha sido comentado",
+                    "content": "Su ticket ha sido comentado",
+                    "url": request.get_host() + reverse("tickets_app:detail", kwargs={"pk": ticket_id}),
+                    "action_text": "Ver mi ticket",
+                },
+                User.objects.get(pk=user_id).persona.email,
+            )
+
             notification_created = True
         return notification_created
     except Exception as e:
@@ -197,32 +238,83 @@ def created_ticket(notification_type, ticket_id, ticket_title, user_id, request)
         raise e
 
 
-def reject_ticket(notification_type, ticket_id, ticket_title, user_id, current_admin):
+def reject_ticket(notification_type, ticket_id, ticket_title, user_id, current_admin, request):
     message = "Ticket #" + str(ticket_id) + " Rechazado : "
 
     try:
         creation(ticket_id, message, user_id, notification_type, ticket_title)
+
+        # mail para notificar de ticker rechazado al cliente
+        send_email_notification(
+            "Ticket rechazado",
+            {
+                "title": "Su ticket ha sido rechazado",
+                "content": "El siguiente ticket ha sido rechazado",
+                "url": request.get_host() + reverse("tickets_app:detail", kwargs={"pk": ticket_id}),
+                "action_text": "Ver mi ticket",
+            },
+            User.objects.get(pk=user_id["pk"]).persona.email,
+        )
+
         admin_list = User.objects.filter(role=1).values("pk")
         for admin in admin_list:
             if admin["pk"] != current_admin:
                 creation(
                     ticket_id, message, admin["pk"], notification_type, ticket_title
                 )
+
+                # mail para notificar de ticker rechazado a los directores
+                send_email_notification(
+                    "Ticket rechazado",
+                    {
+                        "title": "El ticket ha sido rechazado",
+                        "content": "El siguiente ticket ha sido rechazado",
+                        "url": request.get_host() + reverse("tickets_app:detail", kwargs={"pk": ticket_id}),
+                        "action_text": "Ver mi ticket",
+                    },
+                    User.objects.get(pk=admin["pk"]).persona.email,
+                )
+
         return True
     except Exception as e:
         raise e
 
 
-def approve_ticket(notification_type, ticket_id, ticket_title, user_id, current_admin):
+def approve_ticket(notification_type, ticket_id, ticket_title, user_id, current_admin, request):
     message = "Ticket #" + str(ticket_id) + " Aprobado : "
 
     try:
         creation(ticket_id, message, user_id, notification_type, ticket_title)
+
+        # mail para notificar de ticker rechazado al cliente
+        send_email_notification(
+            "Ticket aprobado",
+            {
+                "title": "Su ticket ha sido aprobado",
+                "content": "El siguiente ticket ha sido aprobado",
+                "url": request.get_host() + reverse("tickets_app:detail", kwargs={"pk": ticket_id}),
+                "action_text": "Ver mi ticket",
+            },
+            User.objects.get(pk=user_id["pk"]).persona.email,
+        )
+
         admin_list = User.objects.filter(role=1).values("pk")
         for admin in admin_list:
             if admin["pk"] != current_admin:
                 creation(
                     ticket_id, message, admin["pk"], notification_type, ticket_title
+                )
+
+                # mail para notificar de ticket Aprobado a los directores
+                send_email_notification(
+                    "Ticket Aprobado",
+                    {
+                        "title": "El ticket ha sido Aprobado",
+                        "content": "El siguiente ticket ha sido Aprobado",
+                        "url": request.get_host() + reverse("tickets_app:detail", kwargs={"pk": ticket_id}),
+                        "action_text": "Ver mi ticket",
+                    },
+                    User.objects.get(pk=admin["pk"]).persona.email,
                 )
         return True
     except Exception as e:
@@ -258,10 +350,11 @@ def get_notifications_for_user(user_notifications):
 
 
 def ticket_status_change(
-        notification_type, ticket_id, user_id, agent_id, current_agent, status_change, current_status, ticket_title):
+        notification_type, ticket_id, user_id, agent_id, current_agent, status_change,
+        current_status, ticket_title, request):
 
     status_to_change = Ticket.STATUS_CHOICES[status_change-1][1]
-    message = "Cambio estado Ticket #" + str(ticket_id) + ": " + status_to_change
+    message = "Ticket #" + str(ticket_id) + ": " + status_to_change
     notification_created = False
 
     try:
@@ -269,11 +362,36 @@ def ticket_status_change(
 
             if status_to_change != "Pendiente":
                 creation(ticket_id, message, user_id, notification_type, ticket_title)
+
+                # Enviar mail al cliente del cambio de estado.
+                send_email_notification(
+                    "Cambio de estado ticket",
+                    {
+                        "title": "Cambio de estadi",
+                        "content": "Su ticket ha cambiado al estado " + status_to_change ,
+                        "url": request.get_host() + reverse("tickets_app:detail", kwargs={"pk": ticket_id}),
+                        "action_text": "Ver mi ticket",
+                    },
+                    User.objects.get(pk=user_id).persona.email,
+                )
+
                 notification_created = True
 
             if current_agent != agent_id and agent_id is not None:
                 creation(ticket_id, message, agent_id, notification_type, ticket_title)
                 notification_created = True
+
+                # Notificacion al agente de cambio de estado
+                send_email_notification(
+                    "Cambio de estado ticket",
+                    {
+                        "title": "Cambio de estadio",
+                        "content": "El ticket asignado ha cambiado al estado " + status_to_change,
+                        "url": request.get_host() + reverse("tickets_app:detail", kwargs={"pk": ticket_id}),
+                        "action_text": "Ver mi ticket",
+                    },
+                    User.objects.get(pk=agent_id).persona.email,
+                )
 
             if status_to_change == "Rechazado":
                 admin_list = User.objects.filter(role=1).values("pk")
@@ -283,10 +401,64 @@ def ticket_status_change(
                             ticket_id, message, admin["pk"], notification_type, ticket_title
                         )
 
+                        # Notificacion al agente de cambio de estado
+                        send_email_notification(
+                            "Cambio de estado ticket",
+                            {
+                                "title": "Ticet Rechazado",
+                                "content": "El ticket ha sido rechazado",
+                                "url": request.get_host() + reverse("tickets_app:detail", kwargs={"pk": ticket_id}),
+                                "action_text": "Ver mi ticket",
+                            },
+                            User.objects.get(pk=admin["pk"]).persona.email,
+                        )
+
                     notification_created = True
 
             return notification_created
 
     except Exception as e:
         raise e
+
+
+def user_created(notification_type, user_id, username, current_user, request):
+
+    message = "Usuario creado: " + username
+    title = "Se ha creado un nuevo usuario."
+    notification_created = False
+
+    # No tiene sentido notificar en la campanita esto
+    # creation(user_id, message, user_id, notification_type, title)
+
+    # Notificamos al usuario que su perfil se ha creado
+    send_email_notification(
+        "Usuario creado",
+        {
+            "title": "DirCom: Usuario Creado ",
+            "content": "Bienvenido a la DirCom, por favor vaya al enlace para iniciar sesion",
+            "url": request.get_host() + reverse("core_app:home"),
+            "action_text": "Iniciar Sesion",
+        },
+        User.objects.get(pk=user_id).persona.email,
+    )
+
+    admin_list = User.objects.filter(role=1).values("pk")
+    for admin in admin_list:
+        if admin["pk"] != current_user:
+            creation(
+                user_id, message, admin["pk"], notification_type, title
+            )
+
+            # Notificamos al usuario que su perfil se ha creado
+            send_email_notification(
+                "Usuario creado",
+                {
+                    "title": "DirCom: Usuario Creado ",
+                    "content": "Bienvenido a la DirCom, por favor vaya al enlace para iniciar sesion",
+                    "url": request.get_host() + reverse("core_app:home"),
+                    "action_text": "Iniciar Sesion",
+                },
+                User.objects.get(pk=user_id).persona.email,
+            )
+
 
