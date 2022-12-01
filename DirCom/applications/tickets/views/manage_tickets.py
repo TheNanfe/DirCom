@@ -5,6 +5,7 @@ from django.views.generic.edit import FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.http import HttpResponseRedirect
+from django.http import HttpRequest
 
 from applications.notifications.models import Notification
 from ...notifications.notifications_utils import create_notification
@@ -105,8 +106,8 @@ class CreateTicketView(LoginRequiredMixin, FormView):
             sub_category=json.dumps(service_info),
         )
         # codigo comentado por si se utilice alguna vez
-        """create_notification("created_ticket", ticket_id=created_ticket.id, ticket_title=created_ticket.title,
-                            user_id=self.request.user.pk)"""
+        create_notification("created_ticket", ticket_id=created_ticket.id, ticket_title=created_ticket.title,
+                            user_id=self.request.user.pk, request=self.request)
 
         return super().form_valid(form)
 
@@ -221,6 +222,8 @@ class EditTicketView(LoginRequiredMixin, UpdateView):
                     agent_id=data["agent"],
                     current_agent=str(self.object.agent_id),
                     ticket_title=data["title"],
+                    request=self.request,
+                    user_id=self.object.user_id
                 )
                 # notificacion para el cambio de status de los tickets
                 create_notification(
