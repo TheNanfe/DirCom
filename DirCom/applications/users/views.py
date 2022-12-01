@@ -24,8 +24,15 @@ from .forms import (
     UserUpdateRoleForm,
     UserLoginForm,
     UpdatePasswordForm,
+    ResetPasswordForm,
+    NewPasswordForm
 )
 from .models import User, Persona
+
+from django.template.loader import render_to_string
+from django.template.defaultfilters import striptags
+from django.core.mail import EmailMultiAlternatives
+from django.conf import settings
 
 
 class PersonaRegisterView(LoginRequiredMixin, CreateView):
@@ -269,3 +276,50 @@ class SwitchStatusUserView(LoginRequiredMixin, View):
             return redirect("core_app:home")
         else:
             return super(SwitchStatusUserView, self).dispatch(request, *args, **kwargs)
+
+
+class ResetPasswordView(FormView):
+    template_name = "users/reset_password.html"
+    form_class = ResetPasswordForm
+    success_url = reverse_lazy("users_app:reset_password_success")
+
+    def form_valid(self, form):
+        mail_to = form.cleaned_data["email"]
+        user = User.objects.get(persona__email=mail_to)
+        if user:
+            context = {
+                "title": "Recuperación de contraseña DirComCRM",
+                "content": "Haz clic en el siguiente enlace para restablecer tu contraseña",
+                "url": settings.APP_DOMAIN
+                + reverse("users_app:new_password", kwargs={"username": user.username}), 
+                "action_text": "Restablecer",
+            }
+            subject = "Recuperación de contraseña DirComCRM"
+            html_content = render_to_string("core/email.html", context)
+            text_content = striptags(html_content)
+            msg = EmailMultiAlternatives(subject, text_content, settings.EMAIL_FROM, [mail_to])
+            msg.attach_alternative(html_content, "text/html")
+            print(mail_to)
+            print(context)
+            msg.send()
+
+        return super(ResetPasswordView, self).form_valid(form)
+
+
+class ResetPasswordSuccessView(TemplateView):
+    template_name = "users/reset_password_success.html"
+
+
+class NewPasswordView(FormView):
+    template_name = "users/reset_password.html"
+    form_class = NewPasswordForm
+    success_url = reverse_lazy("core_app:home")
+
+    def form_valid(self, form):
+        username = self.kwargs["username"]
+        user = User.objects.get(username=username)
+        new_password = form.cleaned_data["custom_password"]
+        user.set_password(new_password)
+        user.save()
+
+        return super(NewPasswordView, self).form_valid(form)

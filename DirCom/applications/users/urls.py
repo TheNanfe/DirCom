@@ -17,4 +17,7 @@ urlpatterns = [
     path("editar/<pk>/", views.UserUpdateView.as_view(), name="edit"),
     path("update/<pk>/", views.UserUpdateRoleView.as_view(), name="update"),
     path("eliminar/<username>/", views.SwitchStatusUserView.as_view(), name="switch"),
+    path("recuperar/", views.ResetPasswordView.as_view(), name="reset_password"),
+    path("recuperar/<username>/", views.NewPasswordView.as_view(), name="new_password"),
+    path("enviado/", views.ResetPasswordSuccessView.as_view(), name="reset_password_success"),
 ]

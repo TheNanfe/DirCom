@@ -211,3 +211,49 @@ class UpdatePasswordForm(forms.Form):
         """ método para validar que el usuario tiene una contraseña mayor a 5 carácteres """
         if len(self.cleaned_data["custom_password"]) <= 5:
             self.add_error("custom_password", "La contraseña es muy corta")
+
+
+class ResetPasswordForm(forms.Form):
+    # campo para introducir tu correo
+    email = forms.EmailField(
+        label="Introduce tu email",
+        required=True,
+    )
+
+    def __init__(self, *args, **kwargs):
+        super(ResetPasswordForm, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs["class"] = "form-control"
+
+
+class NewPasswordForm(forms.Form):
+
+    # campo para nueva contraseña
+    custom_password = forms.CharField(
+        label="Contraseña nueva",
+        required=True,
+        widget=forms.PasswordInput(
+            attrs={"placeholder": "Introduzca su nueva contraseña"}
+        ),
+    )
+
+    # campo para validar que el usuario metió la misma contraseña 2 veces
+    repeat_password = forms.CharField(
+        label="Repetir contraseña nueva",
+        required=True,
+        widget=forms.PasswordInput(attrs={"placeholder": "Repita su nueva contraseña"}),
+    )
+
+    def __init__(self, *args, **kwargs):
+        super(NewPasswordForm, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs["class"] = "form-control"
+
+    def clean_repeat_password(self):
+        """método para validar que el usuario escribió bien su contraseña"""
+        if self.cleaned_data["custom_password"] != self.cleaned_data["repeat_password"]:
+            self.add_error("repeat_password", "Las contraseñas no coinciden")
+
+        """ método para validar que el usuario tiene una contraseña mayor a 5 carácteres """
+        if len(self.cleaned_data["custom_password"]) <= 5:
+            self.add_error("custom_password", "La contraseña es muy corta")
