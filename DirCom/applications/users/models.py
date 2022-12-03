@@ -25,11 +25,16 @@ class Persona(models.Model):
         ("12", "Rectorado - DGPD"),
         ("13", "Rectorado - DGP"),
         ("14", "Rectorado - DGPRI"),
+        ("35", "UA - FACSO"),
+        ("36", "Rectorado - DRIC"),
+        ("37", "Rectorado - Informatica"),
+        ("38", "Rectorado - Transparencia"),
         ("15","CNC - UNA"),
         ("16","CNEA - UNA"),
         ("17","CEMIT - UNA"),
         ("18","CETTRI - UNA"),
         ("19","IICS - UNA"),
+        ("39", "CEVUNA"),
         ("20","Biblioteca Central"),
         ("21", "INCUNA"),
         ("22", "UA - FDCS"),
@@ -45,7 +50,6 @@ class Persona(models.Model):
         ("32", "UA - FP"),
         ("33", "UA - FACEN"),
         ("34", "UA - FENOB"),
-        ("35", "UA - FACSO"),
     )
 
     VINC_CHOICES = (("1", "Contratado"), ("2", "Permanente"),)
