@@ -99,14 +99,16 @@ class UserRegisterView(LoginRequiredMixin, FormView):
             role=form.cleaned_data["role"],
             password=form.cleaned_data["custom_password"],
         )
-
-        create_notification(
-            "user_creation",
-            user_id=created_user.pk,
-            username=created_user.username,
-            current_user=self.request.user.pk,
-            request=self.request
-        )
+        try:
+            create_notification(
+                "user_creation",
+                user_id=created_user.pk,
+                username=created_user.username,
+                current_user=self.request.user.pk,
+                request=self.request
+            )
+        except Exception as e:
+            print("La notificacion no se ha creado --> ", e)
 
         return super(UserRegisterView, self).form_valid(form)
 
