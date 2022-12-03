@@ -430,35 +430,41 @@ def user_created(notification_type, user_id, username, current_user, request):
     # No tiene sentido notificar en la campanita esto
     # creation(user_id, message, user_id, notification_type, title)
 
-    # Notificamos al usuario que su perfil se ha creado
-    send_email_notification(
-        "Usuario creado",
-        {
-            "title": "DirCom: Usuario Creado ",
-            "content": "Bienvenido a la DirCom, por favor vaya al enlace para iniciar sesion",
-            "url": request.get_host() + reverse("core_app:home"),
-            "action_text": "Iniciar Sesion",
-        },
-        User.objects.get(pk=user_id).persona.email,
-    )
+    try:
+        # Notificamos al usuario que su perfil se ha creado
+        send_email_notification(
+            "Usuario creado",
+            {
+                "title": "DirCom: Usuario Creado ",
+                "content": "Bienvenido a la DirCom, por favor vaya al enlace para iniciar sesion",
+                "url": request.get_host() + reverse("core_app:home"),
+                "action_text": "Iniciar Sesion",
+            },
+            User.objects.get(pk=user_id).persona.email,
+        )
 
-    admin_list = User.objects.filter(role=1).values("pk")
-    for admin in admin_list:
-        if admin["pk"] != current_user:
+        # se le notifica a todos los directores
+        admin_list = User.objects.filter(role=1).values("pk")
+        for admin in admin_list:
             creation(
-                user_id, message, admin["pk"], notification_type, title
+                username, message, admin["pk"], notification_type, title
             )
 
             # Notificamos al usuario que su perfil se ha creado
             send_email_notification(
                 "Usuario creado",
                 {
-                    "title": "DirCom: Usuario Creado ",
-                    "content": "Bienvenido a la DirCom, por favor vaya al enlace para iniciar sesion",
-                    "url": request.get_host() + reverse("core_app:home"),
-                    "action_text": "Iniciar Sesion",
+                    "title": "DirCom: Nuevo Usuario Creado ",
+                    "content": "Por favor, vaya al enlace para ver el nuevo usuario creado",
+                    "url": request.get_host() + reverse("users_app:detail", kwargs={"username": username}),
+                    "action_text": "Ver nuevo usuario",
                 },
-                User.objects.get(pk=user_id).persona.email,
+                User.objects.get(pk=admin["pk"]).persona.email,
             )
 
+        notification_created = True
 
+    except Exception as e:
+        raise e
+
+    return notification_created

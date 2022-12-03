@@ -93,8 +93,7 @@ class UserRegisterView(LoginRequiredMixin, FormView):
     def form_valid(self, form):
         # llamamos al método create_user que sobreescribimos
         # en el archivo managers.py
-        print()
-        user_created = User.objects.create_user(
+        created_user = User.objects.create_user(
             form.cleaned_data["username"],
             persona=form.cleaned_data["persona"],
             role=form.cleaned_data["role"],
@@ -103,8 +102,8 @@ class UserRegisterView(LoginRequiredMixin, FormView):
 
         create_notification(
             "user_creation",
-            user_id=user_created.id,
-            username=user_created.username,
+            user_id=created_user.pk,
+            username=created_user.username,
             current_user=self.request.user.pk,
             request=self.request
         )
