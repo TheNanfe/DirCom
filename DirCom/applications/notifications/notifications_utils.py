@@ -367,7 +367,7 @@ def ticket_status_change(
                 send_email_notification(
                     "Cambio de estado ticket",
                     {
-                        "title": "Cambio de estadi",
+                        "title": "Cambio de estado ticket",
                         "content": "Su ticket ha cambiado al estado " + status_to_change ,
                         "url": request.get_host() + reverse("tickets_app:detail", kwargs={"pk": ticket_id}),
                         "action_text": "Ver mi ticket",
@@ -379,19 +379,19 @@ def ticket_status_change(
 
             if current_agent != agent_id and agent_id is not None:
                 creation(ticket_id, message, agent_id, notification_type, ticket_title)
-                notification_created = True
 
                 # Notificacion al agente de cambio de estado
                 send_email_notification(
                     "Cambio de estado ticket",
                     {
-                        "title": "Cambio de estadio",
+                        "title": "Cambio de estado ticket",
                         "content": "El ticket asignado ha cambiado al estado " + status_to_change,
                         "url": request.get_host() + reverse("tickets_app:detail", kwargs={"pk": ticket_id}),
                         "action_text": "Ver mi ticket",
                     },
                     User.objects.get(pk=agent_id).persona.email,
                 )
+                notification_created = True
 
             if status_to_change == "Rechazado":
                 admin_list = User.objects.filter(role=1).values("pk")

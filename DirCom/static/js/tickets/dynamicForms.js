@@ -41,7 +41,7 @@ $("#id_category").change(function () {
     } else if (category.val() === "WEB") {
         let html = (
             '<label for="id_service">Servicio a Solicitar:</label>\
-            <select id="type-service" class="form-control  mb-3 " name="graphic-design" style="margin-bottom:5px;">\
+            <select id="type-service" class="form-control  mb-3 " name="web" style="margin-bottom:5px;">\
                 <option selected value="0">---------</option>\
                 <option value="WEB">Diseño de Sitio Web</option>\
                 <option value="ACTUALIZACION">Diseño de Aviso o Comunicado</option>\
