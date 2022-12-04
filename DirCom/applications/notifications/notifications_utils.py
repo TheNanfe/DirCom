@@ -97,6 +97,7 @@ def create_notification(notification_type, **kwargs):
                 kwargs["ticket_title"],
                 kwargs["user_id"],
                 kwargs["current_admin"],
+                kwargs["agent_id"],
                 kwargs["request"],
             )
 
@@ -176,7 +177,7 @@ def comment_creation(
 
 
 def ticket_assignment(
-    notification_type, ticket_id, agent_id, current_agent, ticket_title, request, user_id
+    notification_type, ticket_id, agent_id, current_agent, ticket_title, user_id, request
 ):
     message = "Ticket #" + str(ticket_id) + " Asignado: "
     notification_created = False
@@ -197,6 +198,7 @@ def ticket_assignment(
                 User.objects.get(pk=agent_id).persona.email,
             )
 
+            creation(ticket_id, message, user_id, notification_type, ticket_title)
             # enviar mail al cliente
             send_email_notification(
                 "Ticket asignado",
@@ -239,7 +241,7 @@ def created_ticket(notification_type, ticket_id, ticket_title, user_id, request)
         raise e
 
 
-def reject_ticket(notification_type, ticket_id, ticket_title, user_id, current_admin, request):
+def reject_ticket(notification_type, ticket_id, ticket_title, user_id, current_admin, agent_id, request):
     message = "Ticket #" + str(ticket_id) + " Rechazado : "
 
     try:
@@ -254,8 +256,23 @@ def reject_ticket(notification_type, ticket_id, ticket_title, user_id, current_a
                 "url": request.get_host() + reverse("tickets_app:detail", kwargs={"pk": ticket_id}),
                 "action_text": "Ver mi ticket",
             },
-            User.objects.get(pk=user_id["pk"]).persona.email,
+            User.objects.get(pk=user_id).persona.email,
         )
+
+        if agent_id is not None and agent_id != current_admin:
+            creation(ticket_id, message, agent_id, notification_type, ticket_title)
+
+            # mail para notificar de ticket rechazado al agente
+            send_email_notification(
+                "Ticket aprobado",
+                {
+                    "title": "Ticket asignado ha sido rechazado",
+                    "content": "El siguiente ticket ha sido rechazado",
+                    "url": request.get_host() + reverse("tickets_app:detail", kwargs={"pk": ticket_id}),
+                    "action_text": "Ver mi ticket",
+                },
+                User.objects.get(pk=agent_id).persona.email,
+            )
 
         admin_list = User.objects.filter(role=1).values("pk")
         for admin in admin_list:
@@ -393,7 +410,7 @@ def ticket_status_change(
 
                 notification_created = True
 
-            if current_agent != agent_id and agent_id is not None:
+            if current_agent != agent_id and agent_id is not None and agent_id != "":
                 creation(ticket_id, message, agent_id, notification_type, ticket_title)
 
                 # Notificacion al agente de cambio de estado

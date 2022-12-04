@@ -175,6 +175,7 @@ class RejectTicketView(LoginRequiredMixin, View):
             ticket_title=ticket.title,
             user_id=ticket.user_id,
             current_admin=current_admin,
+            agent_id=ticket.agent_id,
             request=self.request
         )
         return HttpResponseRedirect(
@@ -197,6 +198,19 @@ class AssignTicketView(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self, **kwargs):
         ticket = self.kwargs.get("pk")
+        assigned_ticket = Ticket.objects.get(pk=ticket)
+        try:
+            create_notification(
+                "ticket_assignment",
+                ticket_id=assigned_ticket.pk,
+                agent_id=assigned_ticket.agent_id,
+                current_agent=str(self.request.user.pk),
+                ticket_title=assigned_ticket.title,
+                user_id=assigned_ticket.user_id,
+                request=self.request,
+            )
+        except Exception as e:
+            print(e)
         url = reverse("tickets_app:detail", kwargs={"pk": ticket})
         return url
 
@@ -256,7 +270,7 @@ class EditTicketView(LoginRequiredMixin, UpdateView):
                     "ticket_status_change",
                     ticket_id=self.object.pk,
                     user_id=self.object.user_id,
-                    agent_id=self.object.agent_id,
+                    agent_id=data["agent"],
                     current_agent=self.request.user.pk,
                     status_change=int(data['status']),
                     current_status=self.object.status,
