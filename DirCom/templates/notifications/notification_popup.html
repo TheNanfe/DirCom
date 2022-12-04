@@ -70,6 +70,26 @@
                         </li>
                     {% endif %}
                 {% endif %}
+                {% if notification.notification_type == "user_creation" %}
+                    {% if notification.status_read == "READ" %}
+                        <li class="mb-1  list_element">
+                            <input type="hidden" id="{{ notification.id }}"
+                                   data-url="{% url 'users_app:detail' notification.url_args %}"/>
+                            <p class=" popup-paragraph text-decoration-none text-dark d-block px-5 py-2 border border-secondary rounded hover-gray"
+                               onclick="update_read_status({{ notification.id }})">
+                                <b>{{ notification.message }}</b><br>{{ notification.title }}</p>
+                        </li>
+                    {% else %}
+                        <li class="mb-1 list_element" style="background:#EFF9F7">
+                            <input type="hidden" id="{{ notification.id }}"
+                                   data-url="{% url 'users_app:detail' notification.url_args %}"/>
+                            <p
+                                    class=" popup-paragraph text-decoration-none text-dark d-block px-5 py-2 border border-secondary rounded hover-gray"
+                                    onclick="update_read_status({{ notification.id }})">
+                                <b>{{ notification.message }}</b><br>{{ notification.title }}</p>
+                        </li>
+                    {% endif %}
+                {% endif %}
             {% endfor %}
             <li class="mb-1 list_element">
                 <p style="text-align: center"

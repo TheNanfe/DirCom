@@ -79,24 +79,24 @@ def get_json_data(form):
             service_info = {"COMUNICADO": extra_info}
 
     if form.data["category"] == "WEB":
-        if form.data["WEB"] == "WEB":
+        if form.data["web"] == "WEB":
             extra_info.append({"content": form.data["content1"], "description": "Objetivos del sitio web"})
             extra_info.append({"content": form.data["content2"], "description": "Referencias para el sitio web"})
 
             service_info = {"WEB": extra_info}
 
-        if form.data["WEB"] == "ACTUALIZACION":
+        if form.data["web"] == "ACTUALIZACION":
             extra_info.append({"content": form.data["content1"], "description": "Actualizaciones, Ajustes o Cambios a realizar"})
             extra_info.append({"content": form.data["content2"], "description": "Dirección URL de la Sección"})
 
             service_info = {"ACTUALIZACION": extra_info}
 
-        if form.data["WEB"] == "CONCURSOS":
+        if form.data["web"] == "CONCURSOS":
             extra_info.append({"content": form.data["content1"], "description": "Nombre Completo y Estado del Concurso (Formato Estándar)"})
 
             service_info = {"CONCURSOS": extra_info}
 
-        if form.data["WEB"] == "CONVENIOS":
+        if form.data["web"] == "CONVENIOS":
             extra_info.append({"content": form.data["content1"], "description": "Nombre Completo del Convenio"})
 
             service_info = {"CONVENIOS": extra_info}

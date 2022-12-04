@@ -41,7 +41,7 @@ $("#id_category").change(function () {
     } else if (category.val() === "WEB") {
         let html = (
             '<label for="id_service">Servicio a Solicitar:</label>\
-            <select id="type-service" class="form-control  mb-3 " name="graphic-design" style="margin-bottom:5px;">\
+            <select id="type-service" class="form-control  mb-3 " name="web" style="margin-bottom:5px;">\
                 <option selected value="0">---------</option>\
                 <option value="WEB">Diseño de Sitio Web</option>\
                 <option value="ACTUALIZACION">Diseño de Aviso o Comunicado</option>\
@@ -96,7 +96,7 @@ $("#dynamic-select").on("change", "#type-service", function () {
                  <label for="id_content2">Objetivos del Material:</label>\
                  <textarea name="content2" cols="40" rows="3" class="form-control mb-3" required="" id="id_content2"></textarea>\
                  <label for="id_content3">Fecha Limite para entrega:</label>\
-                 <input type="date" name="content3" cols="20" rows="3" class="mb-3" required="" id="id_content3">\
+                 <input style="display: block" type="date" name="content3"  cols="20" rows="3" class="mb-3" required="" id="id_content3">\
                  <label for="id_content4">Destino: donde se presentará el material para realizarlo en el formato adecuado:</label>\
                  <textarea name="content4" cols="40" rows="3" class="form-control mb-3" required="" id="id_content4"></textarea>\
                  <label for="id_content5">Responsable del área y horario:</label>\
@@ -117,7 +117,7 @@ $("#dynamic-select").on("change", "#type-service", function () {
                  <label for="id_content2">Observaciones generales:</label>\
                  <textarea name="content2" cols="40" rows="3" class="form-control mb-3" required="" id="id_content2"></textarea>\
                  <label for="id_content3">Fecha de grabación:</label>\
-                 <input type="date" name="content3" cols="20" rows="3" class="mb-3" required="" id="id_content3">\
+                 <input style="display: block" type="date" name="content3"  cols="20" rows="3" class="mb-3" required="" id="id_content3">\
                  <label for="id_content4">Referencias (link material similar al deseado):</label>\
                  <textarea name="content4" cols="40" rows="3" class="form-control mb-3" required="" id="id_content4"></textarea>\
                  <label for="id_content5">Responsable del área y horario:</label>\
@@ -132,7 +132,7 @@ $("#dynamic-select").on("change", "#type-service", function () {
                  <label for="id_content1">Indicaciones generales para edición:</label>\
                  <textarea name="content1" cols="40" rows="3" class="form-control mb-3" required="" id="id_content1"></textarea>\
                  <label for="id_content2">Fecha Limite para entrega:</label>\
-                 <input type="date" name="content2" cols="20" rows="3" class="mb-3" required="" id="id_content2">\
+                 <input style="display: block" type="date" name="content2"  cols="20" rows="3" class="mb-3" required="" id="id_content2">\
                  <label for="id_content3">Responsable del área y horario:</label>\
                  <textarea name="content3" cols="40" rows="3" class="form-control mb-3" required="" id="id_content3"></textarea>\
                  <label for="id_content4">Objetivos del Material:</label>\
@@ -145,7 +145,7 @@ $("#dynamic-select").on("change", "#type-service", function () {
                  <label for="id_content1">Nombre de Actividad:</label>\
                  <textarea name="content1" cols="40" rows="3" class="form-control mb-3" required="" id="id_content1"></textarea>\
                  <label for="id_content2">Fecha:</label>\
-                 <input type="date" name="content2" cols="20" rows="3" class="mb-3" required="" id="id_content2">\
+                 <input style="display: block" type="date" name="content2"  cols="20" rows="3" class="mb-3" required="" id="id_content2">\
                  <label for="id_content3">Lugar de Actividad:</label>\
                  <textarea name="content3" cols="40" rows="3" class="form-control mb-3" required="" id="id_content3"></textarea>\
                  <label for="id_content4">Mensaje a Comunicar:</label>\

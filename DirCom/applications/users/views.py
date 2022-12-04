@@ -34,6 +34,8 @@ from django.template.defaultfilters import striptags
 from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
 
+from ..notifications.notifications_utils import *
+
 
 class PersonaRegisterView(LoginRequiredMixin, CreateView):
     """vista para que el admin pueda crear personas"""
@@ -91,13 +93,22 @@ class UserRegisterView(LoginRequiredMixin, FormView):
     def form_valid(self, form):
         # llamamos al método create_user que sobreescribimos
         # en el archivo managers.py
-        print()
-        User.objects.create_user(
+        created_user = User.objects.create_user(
             form.cleaned_data["username"],
             persona=form.cleaned_data["persona"],
             role=form.cleaned_data["role"],
             password=form.cleaned_data["custom_password"],
         )
+        try:
+            create_notification(
+                "user_creation",
+                user_id=created_user.pk,
+                username=created_user.username,
+                current_user=self.request.user.pk,
+                request=self.request
+            )
+        except Exception as e:
+            print("La notificacion no se ha creado --> ", e)
 
         return super(UserRegisterView, self).form_valid(form)
 
