@@ -107,6 +107,7 @@ def create_notification(notification_type, **kwargs):
                 kwargs["ticket_title"],
                 kwargs["user_id"],
                 kwargs["current_admin"],
+                kwargs["agent_id"],
                 kwargs["request"],
             )
 
@@ -280,13 +281,13 @@ def reject_ticket(notification_type, ticket_id, ticket_title, user_id, current_a
         raise e
 
 
-def approve_ticket(notification_type, ticket_id, ticket_title, user_id, current_admin, request):
+def approve_ticket(notification_type, ticket_id, ticket_title, user_id, current_admin, agent_id, request):
     message = "Ticket #" + str(ticket_id) + " Aprobado : "
 
     try:
         creation(ticket_id, message, user_id, notification_type, ticket_title)
 
-        # mail para notificar de ticker rechazado al cliente
+        # mail para notificar de ticket aprobado al cliente
         send_email_notification(
             "Ticket aprobado",
             {
@@ -295,8 +296,23 @@ def approve_ticket(notification_type, ticket_id, ticket_title, user_id, current_
                 "url": request.get_host() + reverse("tickets_app:detail", kwargs={"pk": ticket_id}),
                 "action_text": "Ver mi ticket",
             },
-            User.objects.get(pk=user_id["pk"]).persona.email,
+            User.objects.get(pk=user_id).persona.email,
         )
+
+        if agent_id is not None and agent_id != current_admin:
+            creation(ticket_id, message, agent_id, notification_type, ticket_title)
+
+            # mail para notificar de ticket aprobado al agente
+            send_email_notification(
+                "Ticket aprobado",
+                {
+                    "title": "Ticket asignado ha sido aprobado",
+                    "content": "El siguiente ticket ha sido aprobado",
+                    "url": request.get_host() + reverse("tickets_app:detail", kwargs={"pk": ticket_id}),
+                    "action_text": "Ver mi ticket",
+                },
+                User.objects.get(pk=agent_id).persona.email,
+            )
 
         admin_list = User.objects.filter(role=1).values("pk")
         for admin in admin_list:

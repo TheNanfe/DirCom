@@ -146,6 +146,7 @@ class AproveTicketView(LoginRequiredMixin, View):
             ticket_title=ticket.title,
             user_id=ticket.user_id,
             current_admin=current_admin,
+            agent_id=ticket.agent_id,
             request=self.request,
         )
         return HttpResponseRedirect(reverse("tickets_app:assign", kwargs={"pk": pk}))
