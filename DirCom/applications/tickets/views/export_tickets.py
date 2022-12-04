@@ -108,7 +108,7 @@ def export_tickets_csv(request):
         writer.writerow(
             [
                 str(ticket.user.persona),
-                ticket.email,
+                ticket.user.persona.email,
                 ticket.title,
                 ticket.get_status_display(),
                 ticket.get_urgency_display(),
